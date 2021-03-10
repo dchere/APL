@@ -1,0 +1,262 @@
+      ⍝ --- Task 1 -------------------------------------------------------------
+      ⍝
+      ⍝ Given two vectors (the same length) with coupon and redemption rates of
+      ⍝ the bond respectively. We need to find average yield per year.
+      ⍝ For example, there is a bond with floating rate and irregular
+      ⍝ redemptions, which matures in 4 years. The face value of the bond at
+      ⍝ issue is 1,000.
+      ⍝
+      ⍝                 | Year 0    | Year 1    | Year 2    | Year 3    | Year 4
+      ⍝ Nominal         | -1000     | 1000      | 900       | 600       | 400
+      ⍝ Coupon rate     |           | 5%        | 10%       | 15%       | 15%
+      ⍝ Coupon payment, EOY         | 50        | 90        | 90        | 60
+      ⍝ Redemption rate |           | 10%       | 30%       | 20%       | 40%
+      ⍝ Redemption payment, EOY     | 100       | 300       | 200       | 400
+      ⍝ Total payment   | -1000     | 150       | 390       | 290       | 460
+      ⍝
+      ⍝ Total payments for 4 years = 150+ 390 +290 +460 = 1290
+      ⍝
+      ⍝ Rate of return = (1290 - 1000) / 1000 = 29%
+      ⍝ Average yield per year = 29% / 4 Years = 7,25%
+      ⍝
+      ⍝ In the above example, input data is couponRate = 0.05, 0.1, 0.15, 0.15
+      ⍝ and redemptionRate = 0.1,0.3,0.2,0.4 and answer is averageYield = 7.25.
+      ⍝
+
+      ⍝ A block of helper functions
+
+      ⍝ An average value of a vector
+      Average ← {(+/⍵)÷(⍴,⍵)}
+
+      ⍝ Creates a percentage value from a floating-point number and rounded it
+      ⍝ up to 2 digits after the point
+      RoundToPercent ← {0.01×⌊0.5 + ⍵×10000}
+
+      ⍝ To compare two floating-point numbers
+      Equal ← {0.01 > | ⍺ - ⍵}
+
+      ⍝ Input
+      couponRate ← 0.05 0.1 0.15 0.15
+      redemptionRate ← 0.1 0.3 0.2 0.4
+
+      ⍝ A place for two asserts
+      1 Equal +/redemptionRate
+      (⍴couponRate) Equal ⍴redemptionRate
+
+      ⍝ Probably not the fastest solution but should works
+      AverageYield ← {RoundToPercent Average ⍵ × ¯1↓(1 - +\0,(⍺ {⍺[⍳⍵]} (⍴⍺)))}
+
+      ⍝ Final influx and check
+      7.25 Equal averageYield ← redemptionRate AverageYield couponRate
+
+      ⍝ --- Task 2 -------------------------------------------------------------
+      ⍝
+      ⍝ Business logic:
+      ⍝
+      ⍝ 1) There are 2 bank accounts. Bank Account Plus (BA Plus) and Bank
+      ⍝ Account Minus (BA Minus).
+      ⍝
+      ⍝ 2) It is possible to have non-zero balance only on one bank account and
+      ⍝ another bank account would always have a zero balance. Two bank accounts
+      ⍝ could have zero balance simultaneously.
+      ⍝
+      ⍝ 3) During the day there are a lot of buy and sell transactions. Buy
+      ⍝ transaction decreases cash flow and sell transaction increases cash
+      ⍝ flow.
+      ⍝
+      ⍝ 4) Update of bank account balance is not undertaken after the save of
+      ⍝ each transaction, but only once end of day.
+      ⍝
+      ⍝ E.g.
+      ⍝
+      ⍝ Day 1
+      ⍝
+      ⍝ Both bank accounts have zero balance BA Plus Day 1 = 0 and
+      ⍝ BA Minus Day 1 = 0 in the beginning of the day.
+      ⍝ In the end of the day cash flows from all transactions, which were saved
+      ⍝ during the Day 1, are summed up and net cash flow of the Day 1 (∆Day 1)
+      ⍝ is calculated.
+      ⍝
+      ⍝ ∆Day 1 = Cash Flow Buy Day 1 + Cash Flow Sell Day 1
+      ⍝
+      ⍝ If net cash flow is less than zero, then balance of BA Minus with
+      ⍝ negative number should be updated, if cash flow is greater than zero
+      ⍝ than BA Plus with positive number should be updated.
+      ⍝
+      ⍝ For instance, Cash Flow Buy Day 1 = -70. Cash Flow Sell Day 1 = 50
+      ⍝ therefore, ∆Day 1 = 50 + (-70) = -20
+      ⍝ And in the end of Day 1: BA Plus Day 1 = 0 and BA Minus Day 1 = -20.
+      ⍝
+      ⍝ Day 2
+      ⍝
+      ⍝ Again, during the day there are a lot of buy/sell transactions. In the
+      ⍝ end of the Day 2 cash flows from all transactions, which were saved
+      ⍝ during the Day 2, are summed up and net cash flow of the Day 2 (∆Day 2)
+      ⍝ is calculated.
+      ⍝
+      ⍝ Cash Flow Buy Day 2 = -40 and Cash Flow Sell Day 2 = 80.
+      ⍝ ∆Day 2 = 80 + (-40) = 40.
+      ⍝ As the positive ∆Day 2 offsets the negative balance of BA Minus Day 1,
+      ⍝ the balance of BA Minus Day 2 = 0 (see constraint #2). And the residual
+      ⍝ (+40 – 20 = 20) goes to BA Plus Day 2.
+      ⍝ And in the end of Day 2: BA Plus Day 2 = 20 and BA Minus Day 2 = 0.
+      ⍝
+      ⍝ Day 3
+      ⍝
+      ⍝ Again, during the day there are buy/sell transactions. In the end of the
+      ⍝ Day 3 cash flows from all transactions, which were saved during the
+      ⍝ Day 3, are summed up and net cash flow of the Day 3 (∆Day 3) is
+      ⍝ calculated.
+      ⍝ Cash Flow Buy Day 3 = -70 and Cash Flow Sell Day 3 = 60.
+      ⍝ ∆Day 3 = 60 + (-70) = -10.
+      ⍝
+      ⍝ As the negative ∆Day 3 does not offset the positive balance of
+      ⍝ BA Plus Day2, the balance of BA Plus Day3 is reduced on ∆Day 3.
+      ⍝
+      ⍝ In the end of Day 3: BA Plus Day 3 = 10 and BA Minus Day 3 = 0.
+      ⍝
+      ⍝ What is needed to be solved: Given vector (any length) of the net cash
+      ⍝ flow per each day. You need find the days when the bank accounts will be
+      ⍝ changed (BA Plus on BA Minus or vise versa).
+      ⍝
+      ⍝ For example, for the input vector
+      ⍝ deltaPerDay =20,-10,-30,20,30,-50,20,-30,20,20 answer is days = 3,6,10.
+      ⍝
+
+      ⍝ Input
+      deltaPerDay ← 20 ¯10 ¯30 20 30 ¯50 20 ¯30 20 20
+
+      ⍝ Helper function that provides an array of sums of the past days' balances
+      Sums ← {+\(⍵ {⍺[⍳⍵]} (⍴⍵))}
+
+      sums ← Sums deltaPerDay
+
+      ⍝ Positive and negative balances
+      positive ← sums > 0
+      negative ← sums < 0
+
+      ⍝ Switch from the positive to negative balance
+      plusMinus ← 2 ≤ 0,(¯1↓positive) + 1↓negative
+      ⍝ Switch from the negative to positive balance
+      minusPlus ← 2 ≤ 0,(1↓positive) + ¯1↓negative
+
+      ⍝ Final moment and check
+      3 6 10 ≡ (plusMinus + minusPlus) / ⍳⍴deltaPerDay
+
+      ⍝ The behavior is like in the example. But there is a moment.
+      ⍝ In the example:
+      ⍝ Total balance: 20 10 ¯20 0 30 ¯20 0 ¯30 ¯10 10
+      ⍝ After the day: 1  2  3   4 5  6   7 8   9   10
+      ⍝ And on days 3 6 and 10 there was a direct switch between accounts and we
+      ⍝ detected it.
+      ⍝ But there is one more switch between the balances on day 5. But it was
+      ⍝ through day 4 with zero balance and we did not take it into account.
+
+      ⍝ --- Task 3 -------------------------------------------------------------
+      ⍝
+      ⍝ Business logic:
+      ⍝
+      ⍝ Client has one Portfolio Group and 5 linked portfolios:
+      ⍝ P1, P2, P3, P4, P5. Portfolios P1, P2, P3 participate in security
+      ⍝ lending program, while P4 and P5 don’t.
+      ⍝
+      ⍝ To be sure that all portfolios equally participate in security lending
+      ⍝ transactions, credit score is assigned to portfolios, which are part of
+      ⍝ security lending program, i.e. to portfolios P1, P2, P3 after each
+      ⍝ security lending transaction is saved. As portfolios P4 and P5 do not
+      ⍝ participate in the security lending program theirs credit score would be
+      ⍝ always null. If a portfolio, which is part of security lending program,
+      ⍝ participates in security lending transaction then a positive score would
+      ⍝ be assigned, if a portfolio does not participate, then negative score
+      ⍝ would be assigned.
+      ⍝
+      ⍝ Do not participating in security lending program means that the system
+      ⍝ won’t calculate the credit score for P4 and P5 after each security
+      ⍝ lending transaction.
+      ⍝
+      ⍝ Assume that:
+      ⍝
+      ⍝ P1 has 10,000 of BOND1,
+      ⍝ P2 has 20,000 of BOND1, and
+      ⍝ P3 has 15,000 of BOND1.
+      ⍝ P4 has 45,000 of BOND1.
+      ⍝ P5 has 5,000 of BOND1.
+      ⍝
+      ⍝ If the Client, wants to lend BOND1 at amount of 30,000, the BOND would
+      ⍝ be picked up from P1 at amount of 10,000, and P2 at amount of 20,000.
+      ⍝ P3 would not take a participation in the current lending. P4 and P5
+      ⍝ would not take a participation in the current lending as well.
+      ⍝
+      ⍝ For instance, after above mentioned lending the system assigns:
+      ⍝ +10,000 score to P1,
+      ⍝ +20,000 score to P2,
+      ⍝ -10,000 to P3, and null to P4 and P5.
+      ⍝
+      ⍝ The system should pick up portfolios with negative credit score first in
+      ⍝ next security lending transaction. The portfolios P4 and P5 (which do
+      ⍝ not participate in lending program) should be picked up in the last turn
+      ⍝ depending on their balances (i.e. portfolio with greater balance should
+      ⍝ be picked up first).
+      ⍝
+      ⍝ For instance, if the balances of BOND2 in each portfolio are:
+      ⍝
+      ⍝ P1 has 13,000 of BOND2,
+      ⍝ P2 has 10,000 of BOND2,
+      ⍝ P3 has 25,000 of BOND2,
+      ⍝ P4 has 7,000 of BOND2, and
+      ⍝ P5 has 15,000 of BOND2,
+      ⍝
+      ⍝ then for the next security lending transaction we have the following
+      ⍝ priority of the portfolios:
+      ⍝
+      ⍝ P3 has 1st priority as its credit score -10000 is the least,
+      ⍝ P1 has 2nd priority as its credit score 10000 is less than credit score
+      ⍝ 20000 of the portfolio P2,
+      ⍝ P2 has 3rd priority as its credit score 20000 is the greatest,
+      ⍝ P5 has 4th priority as its balance 15000 is greater than balance 7000 of
+      ⍝ the portfolio P4, and P4 has 5th priority.
+      ⍝
+      ⍝ Thus, if the Client wants to lend BOND2 at amount of 40,000, the BOND
+      ⍝ would be picked up from:
+      ⍝
+      ⍝ P3 at amount of 25,000,
+      ⍝ P1 at amount of 13,000, and
+      ⍝ P2 at amount of 2,000,
+      ⍝
+      ⍝ if the Client wants to lend BOND2 at amount of 65,000, the BOND would be
+      ⍝ picked up from:
+      ⍝
+      ⍝ P3 at amount of 25,000,
+      ⍝ P1 at amount of 13,000,
+      ⍝ P2 at amount of 10,000,
+      ⍝ P5 at amount of 15,000, and
+      ⍝ P4 at amount of 2,000.
+      ⍝
+      ⍝ What is needed to be solved: Given two vectors (the same length) with
+      ⍝ balances and credit scores of the portfolios in the one portfolio group
+      ⍝ respectively. You need find priority of these portfolios.
+      ⍝
+      ⍝ In the above example your input data is
+      ⍝ balances = 13000, 10000, 25000, 7000, 15000 and
+      ⍝ creditScores= 10000,20000,-10000,null,null and answer is
+      ⍝ priority = 3,1,2,5,4.
+      ⍝
+
+      ⍝ Input
+      balances ← 13000 10000 25000 7000 15000
+      ⍝ input of ⎕NULL should be somehow processed but I do not know how. For now
+      creditScores ← 10000  20000 ¯10000 0 0
+
+      ⍝ Order of indices for portfolio groups that participate in security
+      ⍝ lending program
+      PriorityLending ← {⍋3↑⍵}
+
+      ⍝ Order of indices for portfolio groups that do not participate in the
+      ⍝ security lending program
+      PriorityNotLending ← {3+⍒¯2↑⍵}
+
+      ⍝ Total priority
+      Priority ← {(PriorityLending ⍵), PriorityNotLending ⍺}
+
+      ⍝ Check
+      3 1 2 5 4 ≡ balances Priority creditScores
