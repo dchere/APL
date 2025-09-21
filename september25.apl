@@ -1,9 +1,44 @@
-⍝ dyalog -script Entry_Level.apl
+⍝ dyalog -script september25.apl
 
-⍝ APL unique keyboard:
-⍝ × ÷ |⌈ ⌊ ¯ ⊂ ⊃ ≠ ≤ ≥ ∧ ∨ ~ ⍴ ⍪ ⍳ ⍸ ⍷ ⍒ ⍋ ⍉ / ⌿ \ ⍀ ∘. ⍤ ⎕ ⍞ ⍝ ⍠ ⍫ ⍬ ⍣ ⍢ ⍤ ⍥ ⍨
-⍝ ⍤ ⍣ ⍠ ⍤ ⍥ ⍨ ⍣ ⍠ ⍤ ⍥ ⍨ ⍣ ⍠ ← → ⇐ ⇒ ∇ ⍺ ⍵
+⍝ ← + - × ÷ * ⍟ ⌹ ○ ! ? | ⌈ ⌊ ⊥ ⊤ ⊣ ⊢ = ≠ ≤ < > ≥ ≡ ≢ ∨ ∧ ⍲ ⍱ ↑ ↓ ⊂ ⊃ ⊆ ⌷ ⍋ ⍒ 
+⍝ ⍳ ⍸ ∊ ⍷ ∪ ∩ ~ / \ ⌿ ⍀ , ⍪ ⍴ ⌽ ⊖ ⍉ ¨ ⍨ ⍣ . ∘ ⍛ ⍤ ⍥ @ ⍞ ⎕ ⍠ ⌸ ⌺ ⌶ ⍎ ⍕ ⋄ → ⍵ ⍺ ∇
+⍝ & ¯ ⍬ ∆ ⍙
+
 Assert←{⍺≡⍵:0 ⋄ ⎕SIGNAL 11}  ⍝ Custom assert function for testing
+
+⍝ ------------------------------------------------------------------------------
+⎕←'Slug Generator'
+⍝ Given a string, return a URL-friendly version of the string using the following
+⍝ constraints:
+⍝ All letters should be lowercase.
+⍝ All characters that are not letters, numbers, or spaces should be removed.
+⍝ All spaces should be replaced with the URL-encoded space code %20.
+⍝ Consecutive spaces should be replaced with a single %20.
+⍝ The returned string should not have leading or trailing %20.
+generate_slug←{
+    lower←'abcdefghijklmnopqrstuvwxyz'
+    upper←'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    numbers←'0123456789'
+    mask←∨\~' '=⍵ ⍝ boolean mask to remove leading spaces
+    mask∧←⌽∨\~' '=⌽⍵ ⍝ and boolean mask to remove trailing spaces
+    s←mask/⍵
+    s←(s∊lower,upper,numbers,' ')/s ⍝ remove unwanted characters
+    s←(~2=(+/¨' '=¨2,/s),0)/s ⍝ remove consecutive spaces
+    ⍝ convert to lowercase
+    mask←s∊upper
+    (mask/s)←lower[upper⍳(mask/s)]
+    ⍝ replace spaces with %20
+    s←(1+2×(' '=s))/s
+    mask←s=' '
+    (mask/s)←(+/mask)⍴'%20'
+    ⍝ return the result
+    s
+}
+'helloworld' Assert generate_slug 'helloWorld'
+'hello%20world' Assert generate_slug 'hello world!'
+'helloworld' Assert generate_slug ' hello-world '
+'hello%20world' Assert generate_slug 'hello  world'
+'h3110%20w0r1d' Assert generate_slug '  ?H^3-1*1]0! W[0%R#1]D  '
 ⍝ ------------------------------------------------------------------------------
 ⎕←'Fill The Tank'
 ⍝ Given the size of a fuel tank, the current fuel level, and the price per
