@@ -1,24 +1,15 @@
 ⍝ dyalog -script Entry_Level.apl
 
-⍝ APL Keyboard Symbols Reference
-⍝ Basic arithmetic: + - × ÷ * ⍟ | ! ⌈ ⌊
-⍝ Comparison: = ≠ < ≤ > ≥
-⍝ Logical: ∧ ∨ ⍲ ⍱ ~
-⍝ Array: ⍴ , ⍪ ⍳ ⍸ ⍷ ⍒ ⍋ ⍉ ⍪ ⍴
-⍝ Reduction/Scan: / ⌿ \ ⍀
-⍝ Outer product: ∘. ⍤
-⍝ Miscellaneous: ⎕ ⍞ ⍝ ⍠ ⍫ ⍬ ⍣ ⍢ ⍤ ⍥ ⍨ ⍤ ⍣ ⍠ ⍤ ⍥ ⍨ ⍣ ⍠ ⍤ ⍥ ⍨ ⍣ ⍠
-⍝ Brackets: ( ) [ ] { }
-⍝ Assignment: ← → ⇐ ⇒
-⍝ Function definition: ∇
-⍝ System: )OFF )LOAD )SAVE
+⍝ ← + - × ÷ * ⍟ ⌹ ○ ! ? | ⌈ ⌊ ⊥ ⊤ ⊣ ⊢ = ≠ ≤ < > ≥ ≡ ≢ ∨ ∧ ⍲ ⍱ ↑ ↓ ⊂ ⊃ ⊆ ⌷ ⍋ ⍒ 
+⍝ ⍳ ⍸ ∊ ⍷ ∪ ∩ ~ / \ ⌿ ⍀ , ⍪ ⍴ ⌽ ⊖ ⍉ ¨ ⍨ ⍣ . ∘ ⍛ ⍤ ⍥ @ ⍞ ⎕ ⍠ ⌸ ⌺ ⌶ ⍎ ⍕ ⋄ → ⍵ ⍺ ∇
+⍝ & ¯ ⍬ ∆ ⍙
 
 ⎕←'A function for calculating sum of all numbers in a matrix:'
 ⎕←Sum←{+/+/⍵}
 ⍝ Check
 m←2 2 ⍴ 1 2 3 4 ⍝ A sample matrix
 10≡Sum m
-⍝ ------------------------------------------------------------------------
+⍝ ------------------------------------------------------------------------------
 ⎕←'Improve implemented sum function to be able to handle array of any rank'
 ⍝ Modified reduction. Because possible rank is less or equal to 15
 ⎕←Sum←{+/+/+/+/+/+/+/+/+/+/+/+/+/+/+/⍵}
@@ -28,7 +19,7 @@ m←5 2 12⍴26 16 22 17 21 44 25 22 23 44 41 33 43 36 47 49 30 22 57 20 45 60 4
 4302≡Sum m
 m←8
 8≡Sum m
-⍝ ------------------------------------------------------------------------
+⍝ ------------------------------------------------------------------------------
 ⎕←'Write a function to find all occurrence indices of a given character in a string'
 ⎕←allIndicesOf←{(⍵=⍺)/⍳⍴⍵}
 ⍝ Check
