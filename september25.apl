@@ -89,4 +89,22 @@ number_of_files←{
 200 Assert number_of_files 5 'MB' 1
 366210 Assert number_of_files 4096 'B' 1.5
 453514 Assert number_of_files 220.5 'KB' 100
-
+⍝ ------------------------------------------------------------------------------
+⎕←'Digits vs Letters'
+⍝ Given a string, return "digits" if the string has more digits than letters,
+⍝ "letters" if it has more letters than digits, and "tie" if it has the same
+⍝ amount of digits and letters.
+⍝ Digits consist of 0-9.
+⍝ Letters consist of a-z in upper or lower case.
+⍝ Ignore any other characters.
+digits_or_letters←{
+    ndigits←+/⍵∊'0123456789'
+    nletters←+/⍵∊'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    ⊃(ndigits nletters 1>nletters ndigits 0)/'digits' 'letters' 'tie'
+}
+'tie' Assert digits_or_letters 'abc123'
+'letters' Assert digits_or_letters 'a1b2c3d'
+'digits' Assert digits_or_letters '1a2b3c4'
+'letters' Assert digits_or_letters 'abc123!@#DEF'
+'digits' Assert digits_or_letters 'H3110 W0R1D'
+'tie' Assert digits_or_letters 'P455W0RD'
