@@ -108,3 +108,21 @@ digits_or_letters←{
 'letters' Assert digits_or_letters 'abc123!@#DEF'
 'digits' Assert digits_or_letters 'H3110 W0R1D'
 'tie' Assert digits_or_letters 'P455W0RD'
+⍝ ------------------------------------------------------------------------------
+⎕←'String Mirror'
+⍝ Given two strings, determine if the second string is a mirror of the first.
+⍝ A string is considered a mirror if it contains the same letters in reverse order.
+⍝ Treat uppercase and lowercase letters as distinct.
+⍝ Ignore all non-alphabetical characters.
+is_mirror←{
+    s1 s2←⍵
+    letters←'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    (⌽(s1∊letters)/s1)≡(s2∊letters)/s2
+}
+0 Assert is_mirror 'helloworld' 'helloworld'
+1 Assert is_mirror 'Hello World' 'dlroW olleH'
+1 Assert is_mirror 'RaceCar' 'raCecaR'
+0 Assert is_mirror 'RaceCar' 'RaceCar'
+0 Assert is_mirror 'Mirror' 'rorrim'
+1 Assert is_mirror 'Hello World' 'dlroW-olleH'
+1 Assert is_mirror 'Hello World' '!dlroW !olleH'
