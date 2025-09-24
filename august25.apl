@@ -89,3 +89,26 @@ fibonacci_sequence←{
 (0⍴0) Assert fibonacci_sequence (0 1) 0
 10 20 Assert fibonacci_sequence (10 20) 2
 123456789 987654321 1111111110 2098765431 3209876541 Assert fibonacci_sequence (123456789 987654321) 5
+⍝ ------------------------------------------------------------------------------
+⎕←'S P A C E J A M'
+⍝ Given a string, remove all spaces from the string, insert two spaces between
+⍝ every character, convert all alphabetical letters to uppercase, and return the
+⍝ result.
+⍝ Non-alphabetical characters should remain unchanged (except for spaces).
+space_jam←{
+    s←(~' '=⍵)/⍵
+    upper←'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    lower←'abcdefghijklmnopqrstuvwxyz'
+    lx←s∊lower
+    (lx/s)←upper[lower⍳lx/s] ⍝ convert to uppercase
+    s←((⍴s)⍴3)\s
+    s←(¯2+⍴s)⍴s
+    ((~(⍴s)⍴1 0 0)/s)←' '  ⍝ insert spaces between characters
+    s
+}
+'F  R  E  E  C  O  D  E  C  A  M  P' Assert space_jam 'freeCodeCamp'
+'F  R  E  E  C  O  D  E  C  A  M  P' Assert space_jam '   free   Code   Camp   '
+'H  E  L  L  O  W  O  R  L  D  ?  !' Assert space_jam 'Hello World?!'
+'C  @  T  $  &  D  0  G  $' Assert space_jam 'C@t$ & D0g$'
+'A  L  L  Y  O  U  R  B  A  S  E' Assert space_jam 'allyourbase'
+⍝ ------------------------------------------------------------------------------

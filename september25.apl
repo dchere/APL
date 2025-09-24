@@ -126,3 +126,21 @@ is_mirror←{
 0 Assert is_mirror 'Mirror' 'rorrim'
 1 Assert is_mirror 'Hello World' 'dlroW-olleH'
 1 Assert is_mirror 'Hello World' '!dlroW !olleH'
+⍝ ------------------------------------------------------------------------------
+⎕←'Perfect Square'
+⍝ Given an integer, determine if it is a perfect square.
+⍝ A number is a perfect square if you can multiply an integer by itself to
+⍝ achieve the number. For example, 9 is a perfect square because you can
+⍝ multiply 3 by itself to get it.
+is_perfect_square←{
+    (⍵≥0)∧⍵≡(⌊⍵*0.5)*2
+}
+1 Assert is_perfect_square 9
+1 Assert is_perfect_square 49
+1 Assert is_perfect_square 1
+0 Assert is_perfect_square 2
+0 Assert is_perfect_square 99
+0 Assert is_perfect_square -9
+1 Assert is_perfect_square 0
+1 Assert is_perfect_square 25281
+⍝ ------------------------------------------------------------------------------
