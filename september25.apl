@@ -144,3 +144,15 @@ is_perfect_square←{
 1 Assert is_perfect_square 0
 1 Assert is_perfect_square 25281
 ⍝ ------------------------------------------------------------------------------
+⎕←'2nd Largest'
+⍝ Given an array, return the second largest distinct number.
+second_largest←{
+    u←∪⍵
+    2⊃u[⍒u]
+}
+3 Assert second_largest 1 2 3 4
+94 Assert second_largest 20 139 94 67 31
+4 Assert second_largest 2 3 4 6 6
+55.5 Assert second_largest 10 ¯17 55.5 44 91 0
+0 Assert second_largest 1 0 ¯1 0 1 0 ¯1 1 0
+⍝ ------------------------------------------------------------------------------

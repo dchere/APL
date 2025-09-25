@@ -112,3 +112,24 @@ space_jam←{
 'C  @  T  $  &  D  0  G  $' Assert space_jam 'C@t$ & D0g$'
 'A  L  L  Y  O  U  R  B  A  S  E' Assert space_jam 'allyourbase'
 ⍝ ------------------------------------------------------------------------------
+⎕←'Anagram Checker'
+⍝ Given two strings, determine if they are anagrams of each other (contain the
+⍝ same characters in any order).
+⍝ Ignore casing and white space.
+are_anagrams←{
+    s1 s2←⍵
+    s1←(~s1=' ')/s1
+    s2←(~s2=' ')/s2
+    upper←'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    lower←'abcdefghijklmnopqrstuvwxyz'
+    ((s1∊upper)/s1)←lower[upper⍳(s1∊upper)/s1]
+    ((s2∊upper)/s2)←lower[upper⍳(s2∊upper)/s2]
+    s1[⍋s1]≡s2[⍋s2]
+}
+1 Assert are_anagrams 'listen' 'silent'
+1 Assert are_anagrams 'School master' 'The classroom'
+1 Assert are_anagrams 'A gentleman' 'Elegant man'
+0 Assert are_anagrams 'Hello' 'World'
+0 Assert are_anagrams 'apple' 'banana'
+0 Assert are_anagrams 'cat' 'dog'
+⍝ ------------------------------------------------------------------------------
