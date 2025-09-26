@@ -4,7 +4,7 @@
 ⍝ ⍳ ⍸ ∊ ⍷ ∪ ∩ ~ / \ ⌿ ⍀ , ⍪ ⍴ ⌽ ⊖ ⍉ ¨ ⍨ ⍣ . ∘ ⍛ ⍤ ⍥ @ ⍞ ⎕ ⍠ ⌸ ⌺ ⌶ ⍎ ⍕ ⋄ → ⍵ ⍺ ∇
 ⍝ & ¯ ⍬ ∆ ⍙
 
-Assert←{⍺≡⍵:0 ⋄ ⎕SIGNAL 11}  ⍝ Custom assert function for testing
+Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ ⋄ ⎕←⍵ ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
 ⎕←'Vowel Balance'
@@ -132,4 +132,20 @@ are_anagrams←{
 0 Assert are_anagrams 'Hello' 'World'
 0 Assert are_anagrams 'apple' 'banana'
 0 Assert are_anagrams 'cat' 'dog'
+⍝ ------------------------------------------------------------------------------
+⎕←'Targeted Sum'
+⍝ Given an array of numbers and an integer target, find two unique numbers in
+⍝ the array that add up to the target value. Return an array with the indices of
+⍝ those two numbers, or 'Target not found' if no two numbers sum up to the target.
+find_target←{
+    arr target←⍵
+    sums←arr∘.+arr ⍝ all possible sums of two elements from <arr>
+    (1 1⍉sums)←-target ⍝ invalidate target sum, as elements should be distinct
+    n←⍴arr
+    (1 + target∊sums)⊃'Target not found' ({i←⌊⍵÷n ⋄ i,⍵-i×n}¯1+(,sums)⍳target)
+}
+0 1 Assert find_target (2 7 11 15) 9
+1 2 Assert find_target (3 2 4 5) 6
+4 5 Assert find_target (1 3 5 6 7 8) 15
+'Target not found' Assert find_target (1 3 5 7) 14
 ⍝ ------------------------------------------------------------------------------
