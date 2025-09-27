@@ -173,3 +173,40 @@ sum_of_squares←{
 41791750 Assert sum_of_squares 500
 333833500 Assert sum_of_squares 1000.
 ⍝ ------------------------------------------------------------------------------
+⎕←'3 Strikes'
+⍝ Given an integer between 1 and 10,000, return a count of how many numbers from
+⍝ 1 up to that integer whose square contains at least one digit 3
+squares_with_three←{
+    +/{'3'∊⍕⍵*2}¨⍳⍵
+}
+0 Assert squares_with_three 1
+1 Assert squares_with_three 10
+19 Assert squares_with_three 100
+326 Assert squares_with_three 1000
+4531 Assert squares_with_three 10000
+⍝ ------------------------------------------------------------------------------
+⎕←'Message Decoder'
+⍝ Given a secret message string, and an integer representing the number of
+⍝ letters that were used to shift the message to encode it, return the decoded
+⍝ string.
+⍝ A positive number means the message was shifted forward in the alphabet.
+⍝ A negative number means the message was shifted backward in the alphabet.
+⍝ Case matters, decoded characters should retain the case of their encoded
+⍝ counterparts.
+⍝ Non-alphabetical characters should not get decoded.
+decode←{
+    msg shift←⍵
+    upper←'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    lower←'abcdefghijklmnopqrstuvwxyz'
+    n←⍴upper
+    lx←msg∊upper
+    (lx/msg)←upper[n|(upper⍳(lx/msg)) - shift]
+    lx←msg∊lower
+    (lx/msg)←lower[n|(lower⍳(lx/msg)) - shift]
+    msg
+}
+'This is a secret message.' Assert decode 'Xlmw mw e wigvix qiwweki.' 4
+'Hello World!' Assert decode 'Byffi Qilfx!' 20
+'Are you okay?' Assert decode 'Zqd xnt njzx?' ¯1
+'freeCodeCamp' Assert decode 'oannLxmnLjvy' 9
+⍝ ------------------------------------------------------------------------------
