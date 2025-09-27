@@ -149,3 +149,27 @@ find_target←{
 4 5 Assert find_target (1 3 5 6 7 8) 15
 'Target not found' Assert find_target (1 3 5 7) 14
 ⍝ ------------------------------------------------------------------------------
+⎕←'Factorializer'
+⍝ Given an integer from zero to 20, return the factorial of that number. The
+⍝ factorial of a number is the product of all the numbers between 1 and the
+⍝ given number. The factorial of zero is 1.
+factorial←{
+    ×/1,⍳⍵
+}
+1 Assert factorial 0
+120 Assert factorial 5
+2432902008176640000 Assert factorial 20
+⍝ ------------------------------------------------------------------------------
+⎕←'Sum of Squares'
+⍝ Given a positive integer up to 1,000, return the sum of all the integers
+⍝ squared from 1 up to the number.
+sum_of_squares←{
+    +/(⍳⍵)*2
+
+}
+55 Assert sum_of_squares 5
+385 Assert sum_of_squares 10
+5525 Assert sum_of_squares 25
+41791750 Assert sum_of_squares 500
+333833500 Assert sum_of_squares 1000.
+⍝ ------------------------------------------------------------------------------
