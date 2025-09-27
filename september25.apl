@@ -4,7 +4,7 @@
 ⍝ ⍳ ⍸ ∊ ⍷ ∪ ∩ ~ / \ ⌿ ⍀ , ⍪ ⍴ ⌽ ⊖ ⍉ ¨ ⍨ ⍣ . ∘ ⍛ ⍤ ⍥ @ ⍞ ⎕ ⍠ ⌸ ⌺ ⌶ ⍎ ⍕ ⋄ → ⍵ ⍺ ∇
 ⍝ & ¯ ⍬ ∆ ⍙
 
-Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ ⋄ ⎕←⍵ ⋄ ⎕SIGNAL 11}  ⍝ Custom assert function for testing
+Assert←{⍺≡⍵:0 ⋄ ⎕←(⍺) (≡⍺) ⋄ ⎕←(⍵) (≡⍵) ⋄ ⎕SIGNAL 13}  ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
 ⎕←'Slug Generator'
@@ -173,4 +173,54 @@ speeding←{
 4 8.5 Assert speeding (61 81 74 88 65 71 68) 70
 2 3.5 Assert speeding (100 105 95 102) 100
 1 57 Assert speeding (40 45 44 50 112 39) 55
+⍝ ------------------------------------------------------------------------------
+⎕←'Spam Detector'
+⍝ Given a phone number in the format "+A (BBB) CCC-DDDD", where each letter
+⍝ represents a digit as follows:
+⍝ "A" represents the country code and can be any number of digits.
+⍝ "BBB" represents the area code and will always be three digits.
+⍝ "CCC" and "DDDD" represent the local number and will always be three and four
+⍝ digits long, respectively.
+⍝ Determine if it's a spam number based on the following criteria:
+⍝ The country code is greater than 2 digits long or doesn't begin with a zero 0.
+⍝ The area code is greater than 900 or less than 200.
+⍝ The sum of first three digits of the local number appears within last four
+⍝ digits of the local number.
+⍝ The number has the same digit four or more times in a row (ignoring the
+⍝ formatting characters).
+is_spam←{
+    num←⍵
+    ⍝ country code
+    lx←^\~' '=⍵
+    cc←1↓lx/⍵
+    ⍝ area code
+    s←2↓(~lx)/⍵
+    lx←^\~s=')'
+    area←lx/s
+    ⍝ local number parts
+    s←2↓(~lx)/s
+    l1←3↑s
+    l2←¯4↑s
+⍝ The country code is less than 3 digits long and begins with 0
+    res←(cc[1]='0')^3>⊃⍴cc  
+⍝ The area code is in the range 200-900
+    res^←(900>⍎area)^200≤⍎area
+⍝ The sum of first three digits of the local number is not a digit
+⍝ or does not appear within last four digits
+    sum←+/¯1+'0123456789'⍳l1
+    sum←(1 + 10>sum)⊃('a') (⍕sum)
+    res^←~⊃sum∊l2
+⍝ The number does not have the same digit four or more times in a row
+    res^←~∨/{1=⊃⍴∪⍵}¨4,/cc,area,l1,l2
+⍝ And if all checks passed, it's not spam
+    ~res
+}
+0 Assert is_spam '+0 (200) 234-0182'
+1 Assert is_spam '+091 (555) 309-1922'
+1 Assert is_spam '+1 (555) 435-4792'
+1 Assert is_spam '+0 (955) 234-4364'
+1 Assert is_spam '+0 (155) 131-6943'
+1 Assert is_spam '+0 (555) 135-0192'
+1 Assert is_spam '+0 (555) 564-1987'
+0 Assert is_spam '+00 (555) 234-0182'
 ⍝ ------------------------------------------------------------------------------
