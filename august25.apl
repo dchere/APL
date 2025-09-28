@@ -7,6 +7,39 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Second Best'
+⍝ Given an array of integers representing the price of different laptops, and an
+⍝ integer representing your budget, return:
+⍝ 1. The second most expensive laptop if it is within your budget, or
+⍝ 2. The most expensive laptop that is within your budget, or
+⍝ 3. 0 if no laptops are within your budget.
+⍝ Duplicate prices should be ignored.
+get_laptop_cost←{
+    prices budget←⍵
+    within_budget←∪((prices≤budget)/prices),0
+    within_budget←within_budget[⍒within_budget]
+    i←(1+∨/prices>budget)⊃2 1
+    i⊃within_budget
+}
+1800 Assert get_laptop_cost (1500 2000 1800 1400) 1900
+1800 Assert get_laptop_cost (1500 2000 2000 1800 1400) 1900
+1899 Assert get_laptop_cost (2099 1599 1899 1499) 2200
+0 Assert get_laptop_cost (2099 1599 1899 1499) 1000
+1400 Assert get_laptop_cost (1200 1500 1600 1800 1400 2000) 1450
+⍝ ------------------------------------------------------------------------------
+⎕←'Array Duplicates'
+⍝ Given an array of integers, return an array of integers that appear more than
+⍝ once in the initial array, sorted in ascending order. If no values appear more
+⍝ than once, return an empty array.
+⍝ Only include one instance of each value in the returned array.
+find_duplicates←{
+    arr←⍵[⍋⍵]
+    (1<+/(∪arr)∘.=arr)/∪arr
+}
+⍝ (0⍴0) Assert find_duplicates 1 2 3 4 5
+1 2 Assert find_duplicates 1 2 3 4 1 2
+¯6 0 2 4 5 23 Assert find_duplicates 2 34 0 1 ¯6 23 5 3 2 5 67 ¯6 23 2 43 2 12 0 2 4 4
+⍝ ------------------------------------------------------------------------------
 ⎕←'Hex Generator'
 ⍝ Given a named CSS color string, generate a random hexadecimal (hex) color code
 ⍝ that is dominant in the given color.
