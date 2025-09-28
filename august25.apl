@@ -4,8 +4,79 @@
 ⍝ ⍳ ⍸ ∊ ⍷ ∪ ∩ ~ / \ ⌿ ⍀ , ⍪ ⍴ ⌽ ⊖ ⍉ ¨ ⍨ ⍣ . ∘ ⍛ ⍤ ⍥ @ ⍞ ⎕ ⍠ ⌸ ⌺ ⌶ ⍎ ⍕ ⋄ → ⍵ ⍺ ∇
 ⍝ & ¯ ⍬ ∆ ⍙
 
-Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ ⋄ ⎕←⍵ ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
+Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
+⍝ ------------------------------------------------------------------------------
+⎕←'Hex Generator'
+⍝ Given a named CSS color string, generate a random hexadecimal (hex) color code
+⍝ that is dominant in the given color.
+⍝ The function should handle 'red', 'green', or 'blue' as an input argument.
+⍝ If the input is not one of those, the function should return 'Invalid color'.
+⍝ The function should return a random six-character hex color code where the
+⍝ input color value is greater than any of the others.
+⍝ Example of valid outputs for a given input:
+⍝ Input	  Output
+⍝ 'red'	  'FF0000'
+⍝ 'green' '00FF00'
+⍝ 'blue'  '0000FF'
+generate_hex←{
+    color←⍵
+    two_random_symbols←{⍵[?2⍴≢⍵]}
+    dd←two_random_symbols 'ABCDEF'
+    rr←two_random_symbols '0123456789'
+    r2←two_random_symbols '0123456789'
+    res←(dd,rr,r2) (rr,dd,r2) (rr,r2,dd) 'Invalid color'
+    ⊃res['red' 'green' 'blue'⍳⊂⍵]
+}
+⍝ Two helper functions to test
+⍝ ---
+from_hex←{
+    +/(16 1)×(¯1+'0123456789ABCDEF'⍳⍵)
+}
+175 Assert from_hex 'AF'
+255 Assert from_hex 'FF'
+⍝ ---
+dominant_color←{
+    rgb←from_hex¨(⍵[1 2]) (⍵[3 4]) (⍵[5 6])
+    ⊃('red' 'green' 'blue')[rgb⍳⌈/rgb]
+}
+'red' Assert dominant_color 'FF0000'
+'green' Assert dominant_color '00FF00'
+'blue' Assert dominant_color '0000FF'
+⍝ ---
+
+'Invalid color' Assert generate_hex 'yellow'
+'red' Assert dominant_color r1←generate_hex 'red'
+'red' Assert dominant_color r2←generate_hex 'red'
+1 Assert r1≢r2
+'red' Assert dominant_color r3←generate_hex 'red'
+1 Assert ^/r1≢r2 r3
+'green' Assert dominant_color g1←generate_hex 'green'
+'green' Assert dominant_color g2←generate_hex 'green'
+1 Assert g1≢g2
+'blue' Assert dominant_color b1←generate_hex 'blue'
+'blue' Assert dominant_color b2←generate_hex 'blue'
+1 Assert b1≢b2
+⍝ ------------------------------------------------------------------------------
+⎕←'Unnatural Prime'
+⍝ Given an integer, determine if that number is a prime number or a negative
+⍝ prime number. A prime number is a positive integer greater than 1 that is only
+⍝ divisible by 1 and itself.
+⍝ A negative prime number is the negative version of a positive prime number.
+⍝ 1 and 0 are not considered prime numbers.
+is_unnatural_prime←{
+    n←|⍵
+    (~n∊0 1)∧(1=+/0=(⍳⌊n*0.5)|n)
+}
+0 Assert is_unnatural_prime 1
+0 Assert is_unnatural_prime ¯1
+1 Assert is_unnatural_prime 19
+1 Assert is_unnatural_prime ¯23
+0 Assert is_unnatural_prime 0
+1 Assert is_unnatural_prime 97
+1 Assert is_unnatural_prime ¯61
+0 Assert is_unnatural_prime 99
+0 Assert is_unnatural_prime ¯44
 ⍝ ------------------------------------------------------------------------------
 ⎕←'Vowel Balance'
 ⍝ Given a string, determine whether the number of vowels in the first half of

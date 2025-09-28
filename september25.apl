@@ -7,6 +7,18 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←(⍺) (≡⍺) ⋄ ⎕←(⍵) (≡⍵) ⋄ ⎕SIGNAL 13}  ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'CSV Header Parser'
+⍝ Given the first line of a comma-separated values (CSV) file, return an array
+⍝ containing the headings.
+⍝ The first line of a CSV file contains headings separated by commas.
+⍝ Remove any leading or trailing whitespace from each heading.
+get_headings←{
+    {(⌽~∧\' '=⌽⍵)/⍵}¨{(~∧\' '=⍵)/⍵}¨1↓¨(','(,⊂⍨⊣=,)⊢)⍵
+    }
+'name' 'age' 'city' Assert get_headings 'name,age,city'
+'first name' 'last name' 'phone' Assert get_headings 'first name,last name,phone'
+'username' 'email' 'signup date' Assert get_headings 'username , email , signup date '
+⍝ ------------------------------------------------------------------------------
 ⎕←'Slug Generator'
 ⍝ Given a string, return a URL-friendly version of the string using the following
 ⍝ constraints:
