@@ -7,6 +7,30 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Candlelight'
+⍝ Given an integer representing the number of candles you start with, and an
+⍝ integer representing how many burned candles it takes to create a new one,
+⍝ return the number of candles you will have used after creating and burning as
+⍝ many as you can.
+⍝ For example, if given 7 candles and it takes 2 burned candles to make a new one:
+⍝ Burn 7 candles to get 7 leftovers,
+⍝ Recycle 6 leftovers into 3 new candles (1 leftover remains),
+⍝ Burn 3 candles to get 3 more leftovers (4 total),
+⍝ Recycle 4 leftovers into 2 new candles,
+⍝ Burn 2 candles to get 2 leftovers,
+⍝ Recycle 2 leftovers into 1 new candle,
+⍝ Burn 1 candle.
+⍝ You will have burned 13 total candles in the example.
+burn_candles←{
+    candles leftovers_needed←⍵
+    candles + ⌊(candles - 1) ÷ (leftovers_needed - 1)
+}
+13 Assert burn_candles 7  2
+12 Assert burn_candles 10 5
+29 Assert burn_candles 20 3
+22 Assert burn_candles 17 4
+3517 Assert burn_candles 2345 3
+⍝ ------------------------------------------------------------------------------
 ⎕←'Second Best'
 ⍝ Given an array of integers representing the price of different laptops, and an
 ⍝ integer representing your budget, return:

@@ -7,6 +7,22 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←(⍺) (≡⍺) ⋄ ⎕←(⍵) (≡⍵) ⋄ ⎕SIGNAL 13}  ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Longest Word'
+⍝ Given a sentence, return the longest word in the sentence.
+
+⍝ Ignore periods (.) when determining word length.
+⍝ If multiple words are ties for the longest, return the first one that occurs.
+get_longest_word←{
+    s←⍵ 
+    s←(~s∊'.,')/s ⍝ remove periods and commas
+    words←{(' '≠⍵)/⍵}¨(' '(,⊂⍨⊣=,)⊢)s
+    lengths←{⊃⍴⍵}¨words
+    ⊃words[lengths⍳⌈/lengths]
+}
+'coding' Assert get_longest_word 'coding is fun'
+'educational' Assert get_longest_word 'Coding challenges are fun and educational.'
+'sentence' Assert get_longest_word 'This sentence has multiple long words.'
+⍝ ------------------------------------------------------------------------------
 ⎕←'CSV Header Parser'
 ⍝ Given the first line of a comma-separated values (CSV) file, return an array
 ⍝ containing the headings.
