@@ -7,6 +7,13 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←(⍺) (≡⍺) ⋄ ⎕←(⍵) (≡⍵) ⋄ ⎕SIGNAL 13}  ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Phone Number Formatter'
+⍝ Given a string of ten digits, return the string as a phone number in this
+⍝ format: "+D (DDD) DDD-DDDD".
+format_number←{'+',⍵[1],' (',⍵[1+⍳3],') ',⍵[4+⍳3],'-',⍵[7+⍳4]}
+'+0 (555) 234-0182' Assert format_number '05552340182'
+'+1 (555) 435-4792' Assert format_number '15554354792'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Longest Word'
 ⍝ Given a sentence, return the longest word in the sentence.
 

@@ -7,6 +7,32 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'camelCase'
+⍝ Given a string, return its camel case version using the following rules:
+⍝ Words in the string argument are separated by one or more characters from the
+⍝ following set: space ( ), dash (-), or underscore (_). Treat any sequence of
+⍝ these as a word break.
+⍝ The first word should be all lowercase.
+⍝ Each subsequent word should start with an uppercase letter, with the rest of
+⍝ it lowercase.
+⍝ All spaces and separators should be removed.
+to_camel_case←{
+    s←⍵
+    ((s∊'-_')/s)←' ' ⍝ replace - and _ with space
+    words←{(' '≠⍵)/⍵}¨(' '(,⊂⍨⊣=,)⊢)s
+    words←(0≠⊃¨⍴¨words)/words ⍝ remove empty words
+    lower←'abcdefghijklmnopqrstuvwxyz'
+    upper←'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    words←{w←⍵ ⋄ ((w∊upper)/w)←lower[upper⍳(w∊upper)/w] ⋄ w}¨words
+    (1↓words)←{w←⍵ ⋄ w[1]←upper[lower⍳w[1]] ⋄ w}¨1↓words
+    ⊃,/words
+}
+'helloWorld' Assert to_camel_case 'hello world'
+'helloWorld' Assert to_camel_case 'HELLO WORLD'
+'secretAgentX' Assert to_camel_case 'secret agent-X'
+'freeCodeCamp' Assert to_camel_case 'FREE cODE cAMP'
+'yeOldSeaFaringBuccaneerWithAPegLegAndAParrotNamedSquawk' Assert to_camel_case 'ye old-_-sea  faring_buccaneer_-_with a - peg__leg----and a_parrot_ _named- _squawk'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Candlelight'
 ⍝ Given an integer representing the number of candles you start with, and an
 ⍝ integer representing how many burned candles it takes to create a new one,
