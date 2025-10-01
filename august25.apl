@@ -7,6 +7,78 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNAL 13} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Mile Pace'
+⍝ Given a number of miles ran, and a time in "MM:SS" (minutes:seconds) it took
+⍝ to run those miles, return a string for the average time it took to run each
+⍝ mile in the format "MM:SS".
+mile_pace←{
+    miles time←⍵
+    time←¯6↑'0',time
+    digits←(0 1 2 3 4 5 6 7 8 9)['0123456789'⍸time[1 2 3 5 6]] ⍝ extract digits
+    secs←+/6000 600 60 10 1 × digits
+    pace_secs←⌊secs ÷ miles
+    mins←⌊pace_secs ÷ 60
+    secs←⌊.5+pace_secs - 60×mins
+    mins←¯2↑'0',⍕mins
+    secs←¯2↑'0',⍕secs
+    mins,':',secs
+}
+'08:00' Assert mile_pace 3 '24:00'
+'06:45' Assert mile_pace 1 '06:45'
+'03:30' Assert mile_pace 2 '07:00'
+'04:36' Assert mile_pace 26.2 '120:35'
+⍝ ------------------------------------------------------------------------------
+⎕←'Character Battle'
+⍝ Given two strings representing your army and an opposing army, each character
+⍝ from your army battles the character at the same position from the opposing
+⍝ army using the following rules:
+⍝ Characters a-z have a strength of 1-26, respectively.
+⍝ Characters A-Z have a strength of 27-52, respectively.
+⍝ Digits 0-9 have a strength of their face value.
+⍝ All other characters have a value of zero.
+⍝ Each character can only fight one battle.
+⍝ For each battle, the stronger character wins. The army with more victories,
+⍝ wins the war. Return the following values:
+⍝ "Opponent retreated" if your army has more characters than the opposing army.
+⍝ "We retreated" if the opposing army has more characters than yours.
+⍝ "We won" if your army won more battles.
+⍝ "We lost" if the opposing army won more battles.
+⍝ "It was a tie" if both armies won the same number of battles.
+battle←{
+    my_army opposing_army←⍵
+    
+    n1←⊃⍴my_army
+    n2←⊃⍴opposing_army
+    (n1>n2):'Opponent retreated'
+    (n2>n1):'We retreated'
+    
+    my_score←n1⍴0
+    opponent_score←n2⍴0
+    
+    chars←'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    ((my_army∊chars)/my_score)←chars⍳(my_army∊chars)/my_army
+    ((opposing_army∊chars)/opponent_score)←chars⍳(opposing_army∊chars)/opposing_army
+    
+    digits←'123456789'
+    ((my_army∊digits)/my_score)←digits⍳(my_army∊digits)/my_army
+    ((opposing_army∊digits)/opponent_score)←digits⍳(opposing_army∊digits)/opposing_army
+    
+    my_army←my_score
+    opponent_army←opponent_score
+    my_score←+/my_army>opponent_army
+    opponent_score←+/my_army<opponent_army   
+    (my_score>opponent_score):'We won'
+    (my_score<opponent_score):'We lost'
+    'It was a tie'
+}
+'We lost' Assert battle 'Hello' 'World'
+'We won' Assert battle 'pizza' 'salad'
+'We won' Assert battle 'C@T5' 'D0G$'
+'Opponent retreated' Assert battle 'kn!ght' 'orc'
+'We retreated' Assert battle 'PC' 'Mac'
+'It was a tie' Assert battle 'Wizards' 'Dragons'
+'It was a tie' Assert battle 'Mr. Smith' 'Dr. Jones'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Jbelmud Text'
 ⍝ Given a string, return a jumbled version of that string where each word is
 ⍝ transformed using the following constraints:
