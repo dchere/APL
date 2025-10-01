@@ -1,11 +1,28 @@
-⍝ dyalog -script august.apl
+⍝ dyalog -script august25.apl
 
 ⍝ ← + - × ÷ * ⍟ ⌹ ○ ! ? | ⌈ ⌊ ⊥ ⊤ ⊣ ⊢ = ≠ ≤ < > ≥ ≡ ≢ ∨ ∧ ⍲ ⍱ ↑ ↓ ⊂ ⊃ ⊆ ⌷ ⍋ ⍒ 
 ⍝ ⍳ ⍸ ∊ ⍷ ∪ ∩ ~ / \ ⌿ ⍀ , ⍪ ⍴ ⌽ ⊖ ⍉ ¨ ⍨ ⍣ . ∘ ⍛ ⍤ ⍥ @ ⍞ ⎕ ⍠ ⌸ ⌺ ⌶ ⍎ ⍕ ⋄ → ⍵ ⍺ ∇
 ⍝ & ¯ ⍬ ∆ ⍙
 
-Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
+Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNAL 13} ⍝ Custom assert function for testing
 
+⍝ ------------------------------------------------------------------------------
+⎕←'Jbelmud Text'
+⍝ Given a string, return a jumbled version of that string where each word is
+⍝ transformed using the following constraints:
+⍝ The first and last letters of the words remain in place
+⍝ All letters between the first and last letter are sorted alphabetically.
+⍝ The input strings will contain no punctuation, and will be entirely lowercase.
+jbelmu←{
+    words←{(' '≠⍵)/⍵}¨(' '(,⊂⍨⊣=,)⊢)⍵ ⍝ split into words
+    words←(0≠⊃¨⍴¨words)/words ⍝ remove empty words
+    words←{(2<⊃⍴⍵):{ix←1+⍳¯2+⊃⍴⍵ ⋄ w←⍵[ix] ⋄ w←w[⍋w] ⋄ (⊃⍵),w,(¯1↑⍵),' '}⍵ ⋄ ⍵,' '}¨words
+    ¯1↓⊃,/words
+}
+'hello wlord' Assert jbelmu 'hello world'
+'i love jbelmud text' Assert jbelmu 'i love jumbled text'
+'faccdeeemorp is my faiortve pacle to laern to cdoe' Assert jbelmu 'freecodecamp is my favorite place to learn to code'
+'the qciuk borwn fox jmpus oevr the lazy dog' Assert jbelmu 'the quick brown fox jumps over the lazy dog'
 ⍝ ------------------------------------------------------------------------------
 ⎕←'camelCase'
 ⍝ Given a string, return its camel case version using the following rules:
