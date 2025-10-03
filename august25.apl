@@ -7,6 +7,56 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNAL 13} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Reverse Parenthesis'
+⍝ Given a string that contains properly nested parentheses, return the decoded
+⍝ version of the string using the following rules:
+⍝ All characters inside each pair of parentheses should be reversed.
+⍝ Parentheses should be removed from the final result.
+⍝ If parentheses are nested, the innermost pair should be reversed first, and
+⍝ then its result should be included in the reversal of the outer pair.
+⍝ Assume all parentheses are evenly balanced and correctly nested.
+decode←{
+    cpix←(~∨\')'=⍵)/⍳⍴⍵ ⍝ indices until the closing parenthesis
+    (⊃⍴⍵)=⊃⍴cpix:⍵ ⍝ no parentheses left
+    segmentix←(~⌽∨\'('=⌽⍵[cpix])/cpix ⍝ indices of segments to reverse
+    decode ⍵[⍳0⌈¯2+⊃segmentix],(⌽⍵[segmentix]),⍵[(⍳⍴⍵)~(⍳1+¯1↑segmentix)]
+}
+'abcdef' Assert decode '(f(b(dc)e)a)'
+'Can you read this?' Assert decode '((is?)(a(t d)h)e(n y( uo)r)aC)'
+'freeCodeCamp' Assert decode 'f(Ce(re))o((e(aC)m)d)p'
+⍝ ------------------------------------------------------------------------------
+⎕←'Unorder of Operations'
+⍝ Given an array of integers and an array of string operators, apply the
+⍝ operations to the numbers sequentially from left-to-right. Repeat the
+⍝ operations as needed until all numbers are used. Return the final result.
+⍝ For example, given [1, 2, 3, 4, 5] and ['+', '*'], return the result of
+⍝ evaluating 1 + 2 * 3 + 4 * 5 from left-to-right ignoring standard order of
+⍝ operations.
+⍝ Valid operators are +, -, *, /, and %.
+evaluate←{
+    numbers operators←⍵
+    operators←(¯1 + ⍴numbers)⍴operators
+    i←0
+    opp←{
+        i+←1
+        operators[i]='+': ⍵[1]+⍵[2]
+        operators[i]='-': ⍵[1]-⍵[2]
+        operators[i]='*': ⍵[1]×⍵[2] 
+        operators[i]='/': ⍵[1]÷⍵[2]
+        operators[i]='%': ⍵[2]|⍵[1]
+        'Invalid operator'}
+    iterate←{
+        (2=⊃⍴⍵):opp ⍵ 
+        iterate (iterate ¯1↓⍵),¯1↑⍵
+    }
+    iterate numbers
+}
+3 Assert evaluate (5 6 7 8 9) ('+' '-')
+38 Assert evaluate (17 61 40 24 38 14) ('+' '%')
+60 Assert evaluate (20 2 4 24 12 3) ('*' '/')
+30 Assert evaluate (11 4 10 17 2) ('*' '*' '%')
+¯2 Assert evaluate (33 11 29 13) ('/' '-')
+⍝ ------------------------------------------------------------------------------
 ⎕←'Mile Pace'
 ⍝ Given a number of miles ran, and a time in "MM:SS" (minutes:seconds) it took
 ⍝ to run those miles, return a string for the average time it took to run each

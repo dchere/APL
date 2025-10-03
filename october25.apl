@@ -7,6 +7,38 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'P@ssw0rd Str3ngth!'
+⍝ Given a password string, return "weak", "medium", or "strong" based on the
+⍝ strength of the password.
+⍝ A password is evaluated according to the following rules:
+⍝ It is at least 8 characters long.
+⍝ It contains both uppercase and lowercase letters.
+⍝ It contains at least one number.
+⍝ It contains at least one special character from this set: !, @, #, $, %, ^, &, or *.
+⍝ Return "weak" if the password meets fewer than two of the rules.
+⍝ Return "medium" if the password meets 2 or 3 of the rules.
+⍝ Return "strong" if the password meets all 4 rules.
+check_strength←{
+    rate←8≤≢⍵
+    rate+←(0<+/⍵∊'ABCDEFGHIJKLMNOPQRSTUVWXYZ')∧0<+/⍵∊'abcdefghijklmnopqrstuvwxyz'
+    rate+←0<+/⍵∊'0123456789'
+    rate+←0<+/⍵∊special←'!@#$%^&*'
+    res←'medium'
+    res←⊃(res 'weak')[1 + rate<2]
+    res←⊃(res 'strong')[1 + rate=4]
+    res
+}
+'weak' Assert check_strength '123456'
+'weak' Assert check_strength 'pass!!!'
+'weak' Assert check_strength 'Qwerty'
+'weak' Assert check_strength 'PASSWORD'
+'medium' Assert check_strength 'PASSWORD!'
+'medium' Assert check_strength 'PassWord%^!'
+'medium' Assert check_strength 'qwerty12345'
+'medium' Assert check_strength 'PASSWORD!'
+'strong' Assert check_strength 'S3cur3P@ssw0rd'
+'strong' Assert check_strength 'C0d3&Fun!'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Decimal to Binary'
 ⍝ Given a non-negative integer, return its binary representation as a string.
 ⍝ A binary number uses only the digits 0 and 1 to represent any number. To
