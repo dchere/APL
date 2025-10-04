@@ -7,6 +7,69 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←(⍺) (≡⍺) ⋄ ⎕←(⍵) (≡⍵) ⋄ ⎕SIGNAL 13}  ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Pangram'
+⍝ Given a word or sentence and a string of lowercase letters, determine if the
+⍝ word or sentence uses all the letters from the given set at least once and no
+⍝ other letters.
+⍝ Ignore non-alphabetical characters in the word or sentence.
+⍝ Ignore letter casing in the word or sentence.
+is_pangram←{
+    a b←⍵
+    lower←'abcdefghijklmnopqrstuvwxyz'
+    upper←'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    a←(a∊lower,upper)/a
+    ((a∊upper)/a)←lower[upper⍳(a∊upper)/a]
+    ((b∊upper)/b)←lower[upper⍳(b∊upper)/b]
+    (∧/a∊b)∧(∧/b∊a)
+}
+1 Assert is_pangram 'hello' 'helo'
+0 Assert is_pangram 'hello' 'hel'
+0 Assert is_pangram 'hello' 'helow'
+1 Assert is_pangram 'hello world' 'helowrd'
+1 Assert is_pangram 'Hello World!' 'helowrd'
+0 Assert is_pangram 'Hello World!' 'heliowrd'
+0 Assert is_pangram 'freeCodeCamp' 'frcdmp'
+1 Assert is_pangram 'The quick brown fox jumps over the lazy dog.' 'abcdefghijklmnopqrstuvwxyz'
+⍝ ------------------------------------------------------------------------------
+⎕←'RGB to Hex'
+⍝ Given a CSS rgb(r, g, b) color string, return its hexadecimal equivalent.
+⍝ Here are some example outputs for a given input:
+⍝ Input	Output
+⍝ "rgb(255, 255, 255)"	"#ffffff"
+⍝ "rgb(1, 2, 3)"	"#010203"
+⍝ Make any letters lowercase.
+⍝ Return a # followed by six characters. Don't use any shorthand values.
+rgb_to_hex←{
+    rgb←¯1↓1↓(∨\⍵='(')/⍵ ⍝ remove everything except the numbers and commas
+    rgb←⍎¨{(~∧\' '=⍵)/⍵}¨1↓¨(','(,⊂⍨⊣=,)⊢)rgb
+    '#',⊃,/{'0123456789abcdef'[1 + (⌊⍵ ÷ 16) (16|⍵)]}¨rgb
+}
+'#ffffff' Assert rgb_to_hex 'rgb(255, 255, 255)'
+'#010b6f' Assert rgb_to_hex 'rgb(1, 11, 111)'
+'#add8e6' Assert rgb_to_hex 'rgb(173, 216, 230)'
+'#4f7bc9' Assert rgb_to_hex 'rgb(79, 123, 201)'
+⍝ ------------------------------------------------------------------------------
+⎕←'Tribonacci Sequence'
+⍝ The Tribonacci sequence is a series of numbers where each number is the sum of
+⍝ the three preceding ones. When starting with 0, 0 and 1, the first 10 numbers
+⍝ in the sequence are 0, 0, 1, 1, 2, 4, 7, 13, 24, 44.
+⍝ Given an array containing the first three numbers of a Tribonacci sequence,
+⍝ and an integer representing the length of the sequence, return an array
+⍝ containing the sequence of the given length.
+⍝ Your function should handle sequences of any length greater than or equal to zero.
+⍝ If the length is zero, return an empty array.
+⍝ Note that the starting numbers are part of the sequence.
+tribonacci_sequence←{
+    fibs len←⍵
+    len ⍴({⍵,+/¯3↑⍵} ⍣ (0⌈len - 3)) fibs
+}
+0 0 1 1 2 4 7 13 24 44 81 149 274 504 927 1705 3136 5768 10609 19513 Assert tribonacci_sequence(0 0 1) 20
+(,21) Assert tribonacci_sequence (21 32 43) 1
+(0⍴0) Assert tribonacci_sequence (0 0 1) 0
+10 20 Assert tribonacci_sequence (10 20 30) 2
+10 20 30 Assert tribonacci_sequence (10 20 30) 3
+123 456 789 1368 2613 4770 8751 16134 Assert tribonacci_sequence (123 456 789) 8
+⍝ ------------------------------------------------------------------------------
 ⎕←'Phone Number Formatter'
 ⍝ Given a string of ten digits, return the string as a phone number in this
 ⍝ format: "+D (DDD) DDD-DDDD".
