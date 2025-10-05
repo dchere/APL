@@ -7,6 +7,41 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←(⍺) (≡⍺) ⋄ ⎕←(⍵) (≡⍵) ⋄ ⎕SIGNAL 13}  ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Vowel Repeater'
+⍝ Given a string, return a new version of the string where each vowel is
+⍝ duplicated one more time than the previous vowel you encountered. For instance,
+⍝ the first vowel in the sentence should remain unchanged. The second vowel
+⍝ should appear twice in a row. The third vowel should appear three times in a
+⍝ row, and so on.
+⍝ The letters a, e, i, o, and u, in either uppercase or lowercase, are
+⍝ considered vowels.
+⍝ The original vowel should keeps its case.
+⍝ Repeated vowels should be lowercase.
+⍝ All non-vowel characters should keep their original case.
+repeat_vowels←{
+    ⍝ indices of vowels
+    lower←'aeiou'
+    upper←'AEIOU'
+    isvowel←⍵∊lower,upper
+    ⍝ number of repeated vowels
+    newsix←(⍴⍵)⍴0
+    (isvowel/newsix)←⍳+/isvowel
+    ⍝ change all uppercase vowels to lowercase
+    s←⍵
+    isuppervowel←s∊upper
+    (isuppervowel/s)←lower[upper⍳isuppervowel/s]
+    ⍝ new string with repeated vowel
+    s←(1⌈newsix)\s
+    ⍝ return back the uppercase vowels on the first occurrence
+    (((s∊lower)∧(2≠/0,(1⌈newsix)\newsix))/s)←isvowel/⍵    
+    ⍝ return the result
+    s
+}
+'helloo wooorld' Assert repeat_vowels 'hello world'
+'freeeCooodeeeeCaaaaamp' Assert repeat_vowels 'freeCodeCamp'
+'AEeIiiOoooUuuuu' Assert repeat_vowels 'AEIOU'
+'I liikeee eeeeaaaaatiiiiiing iiiiiiiceeeeeeee creeeeeeeeeaaaaaaaaaam iiiiiiiiiiin Iiiiiiiiiiiiceeeeeeeeeeeeelaaaaaaaaaaaaaand' Assert repeat_vowels 'I like eating ice cream in Iceland'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Pangram'
 ⍝ Given a word or sentence and a string of lowercase letters, determine if the
 ⍝ word or sentence uses all the letters from the given set at least once and no
