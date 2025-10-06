@@ -7,6 +7,44 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←(⍺) (≡⍺) ⋄ ⎕←(⍵) (≡⍵) ⋄ ⎕SIGNAL 13}  ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'IPv4 Validator'
+⍝ Given a string, determine if it is a valid IPv4 Address. A valid IPv4 address
+⍝ consists of four integer numbers separated by dots (.). Each number must
+⍝ satisfy the following conditions:
+⍝ It is between 0 and 255 inclusive.
+⍝ It does not have leading zeros (e.g. 0 is allowed, 01 is not).
+⍝ Only numeric characters are allowed.
+is_valid_ipv4←{
+    digits←'0123456789'
+    (~∧/⍵∊digits,'.'):0 ⍝ only digits and dots
+    parts←{(⍵∊digits)/⍵}¨('.'(,⊂⍨⊣=,)⊢)⍵
+    (4≠⊃⍴parts):0
+    (~∧/{0<⊃⍴⍵}¨parts):0 ⍝ not empty parts
+    (∨/{(1<⊃⍴⍵)∧(⍵[1]='0')}¨parts):0 ⍝ no leading zeros
+    ∧/{{{⍵<256}+/100 10 1×(0 1 2 3 4 5 6 7 8 9)[digits⍳⍵]}¯3↑'00',⍵}¨parts
+}
+1 Assert is_valid_ipv4 '192.168.1.1'
+1 Assert is_valid_ipv4 '0.0.0.0'
+0 Assert is_valid_ipv4 '255.01.50.111'
+0 Assert is_valid_ipv4 '255.00.50.111'
+0 Assert is_valid_ipv4 '256.101.50.115'
+0 Assert is_valid_ipv4 '192.168.101.'
+0 Assert is_valid_ipv4 '192168145213'
+⍝ ------------------------------------------------------------------------------
+⎕←'Matrix Rotate'
+⍝ Given a matrix rotate the matrix 90 degrees clockwise and return it. For
+⍝ instance, given 2 2 ⍴ 1 23 4, which looks like this:
+⍝ 1	2
+⍝ 3	4
+⍝ You should return 2 2 ⍴ 3 1 4 2, which looks like this:
+⍝ 3	1
+⍝ 4	2
+rotate←{⌽⍉⍵}
+(1 1 ⍴ 1) Assert rotate 1 1 ⍴ 1
+(2 2 ⍴ 3 1 4 2) Assert rotate 2 2 ⍴ 1 2 3 4
+(3 3 ⍴ 7 4 1 8 5 2 9 6 3) Assert rotate 3 3 ⍴ 1 2 3 4 5 6 7 8 9
+(3 3 ⍴ 0 1 0 0 0 1 0 1 0) Assert rotate 3 3 ⍴ 0 1 0 1 0 1 0 0 0
+⍝ ------------------------------------------------------------------------------
 ⎕←'Vowel Repeater'
 ⍝ Given a string, return a new version of the string where each vowel is
 ⍝ duplicated one more time than the previous vowel you encountered. For instance,

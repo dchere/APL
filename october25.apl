@@ -7,6 +7,29 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Phone Home'
+⍝ You are given an array of numbers representing distances (in kilometers)
+⍝ between yourself, satellites, and your home planet in a communication route.
+⍝ Determine how long it will take a message sent through the route to reach its
+⍝ destination planet using the following constraints:
+⍝ The first value in the array is the distance from your location to the first
+⍝ satellite. Each subsequent value, except for the last, is the distance to the
+⍝ next satellite.
+⍝ The last value in the array is the distance from the previous satellite to
+⍝ your home planet.
+⍝ The message travels at 300,000 km/s.
+⍝ Each satellite the message passes through adds a 0.5 second transmission delay.
+⍝ Return a number rounded to 4 decimal places, with trailing zeros removed.
+send_message←{
+  0.0001×⌊.5 + +/(((¯1+⍴⍵)⍴5000),0) + ⍵÷30  
+}
+2.5 Assert send_message 300000 300000
+3.0627 Assert send_message 384400 384400
+364.5 Assert send_message 54600000 54600000
+1674.3333 Assert send_message 1000000 500000000 1000000 
+2.4086 Assert send_message 10000 21339 50000 31243 10000
+21.1597 Assert send_message 802101 725994 112808 3625770 481239
+⍝ ------------------------------------------------------------------------------
 ⎕←'Exoplanet Search'
 ⍝ You are given a string where each character represents the luminosity reading
 ⍝ of a star. Determine if the readings have detected an exoplanet using the
