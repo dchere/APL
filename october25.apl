@@ -7,6 +7,39 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Landing Spot'
+⍝ You are given a matrix of numbers (an array of arrays), representing potential
+⍝ landing spots for your rover. Find the safest landing spot based on the
+⍝ following rules:
+⍝ Each spot in the matrix will contain a number from 0-9, inclusive.
+⍝ Any 0 represents a potential landing spot.
+⍝ Any number other than 0 is too dangerous to land. The higher the number, the
+⍝ more dangerous.
+⍝ The safest spot is defined as the 0 cell whose surrounding cells (up to 4
+⍝ neighbors, ignore diagonals) have the lowest total danger.
+⍝ Ignore out-of-bounds neighbors (corners and edges just have fewer neighbors).
+⍝ Return the indices of the safest landing spot. There will always only be one
+⍝ safest spot.
+⍝ For instance, given:
+⍝ [
+⍝  [1, 0],
+⍝  [2, 0]
+⍝]
+⍝ Return [0, 1], the indices for the 0 in the first array.
+find_landing_spot←{
+    n←⊃⍴⍵
+    ⍝ we sum app the neighbors and add 0 columns/rows to avoid boundary issues
+    w←⍵+(0,⍵)[;⍳n]+(⍵,0)[;1+⍳n]+(0⍪⍵)[⍳n;]+(⍵⍪0)[1+⍳n;]
+    ⍝ add a big number to non-zero cells to avoid landing there
+    w+←(⍵≠0)×⌈/,w
+    ipg←¯1+(,w)⍳⌊/⌊/w ⍝ index in the flattened array
+    (⌊ipg÷n) (n|ipg) ⍝ convert to 2D indices
+}
+0 1 Assert find_landing_spot 2 2 ⍴ 1 0 2 0
+1 1 Assert find_landing_spot 3 3 ⍴ 9 0 3 7 0 4 8 0 5
+2 2 Assert find_landing_spot 3 3 ⍴ 1 2 1 0 0 2 3 0 0
+2 1 Assert find_landing_spot 4 4 ⍴ 9 6 0 8 7 1 1 0 3 0 3 9 8 6 0 9
+⍝ ------------------------------------------------------------------------------
 ⎕←'Phone Home'
 ⍝ You are given an array of numbers representing distances (in kilometers)
 ⍝ between yourself, satellites, and your home planet in a communication route.
