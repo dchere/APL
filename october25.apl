@@ -7,6 +7,26 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Goldilocks Zone'
+⍝ You will calculate the "Goldilocks zone" of a star - the region around a star
+⍝ where conditions are "just right" for liquid water to exist.
+⍝ Given the mass of a star, return an array with the start and end distances of
+⍝ its Goldilocks Zone in Astronomical Units.
+⍝ To calculate the Goldilocks Zone:
+⍝ Find the luminosity of the star by raising its mass to the power of 3.5.
+⍝ The start of the zone is 0.95 times the square root of its luminosity.
+⍝ The end of the zone is 1.37 times the square root of its luminosity.
+⍝ Return the distances rounded to two decimal places.
+⍝ For example, given 1 as a mass, return [0.95, 1.37].
+goldilocks_zone←{
+    0.01×⌊.5+100 × 0.95 1.37 × ⍵*1.75 ⍝ 1.75 is 0.5*3.5
+}
+0.95 1.37 Assert goldilocks_zone 1
+0.28 0.41 Assert goldilocks_zone 0.5
+21.85 31.51 Assert goldilocks_zone 6
+9.38 13.52 Assert goldilocks_zone 3.7
+179.69 259.13 Assert goldilocks_zone 20
+⍝ ------------------------------------------------------------------------------
 ⎕←'Landing Spot'
 ⍝ You are given a matrix of numbers (an array of arrays), representing potential
 ⍝ landing spots for your rover. Find the safest landing spot based on the

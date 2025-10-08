@@ -7,6 +7,34 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←(⍺) (≡⍺) ⋄ ⎕←(⍵) (≡⍵) ⋄ ⎕SIGNAL 13}  ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Sentence Capitalizer'
+⍝ Given a paragraph, return a new paragraph where the first letter of each
+⍝ sentence is capitalized.
+⍝ All other characters should be preserved.
+⍝ Sentences can end with a period (.), one or more question marks (?), or one or more exclamation points (!).
+capitalize←{
+    lower←'abcdefghijklmnopqrstuvwxyz'
+    upper←'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    w←⍵
+    ((w∊'.!?')/w)←'.' ⍝ replace sentence ending punctuation with .
+    sentences←('.'(,⊂⍨⊣=,)⊢)w
+    sentences←{
+        (1=⊃⍴⍵):⍵
+        ixs←(∨\⍵∊lower,upper)/⍳⍴⍵
+        (0=⊃⍴ixs):⍵
+        (⍵[⍳¯1+⊃ixs]),(upper[lower⍳((⊃ixs)⊃⍵)]),⍵[1↓ixs]
+    }¨sentences
+    w←1↓⊃,/sentences
+    lx←w∊'.'
+    (lx/w)←lx/⍵
+    w
+}
+'This is a simple sentence.' Assert capitalize 'this is a simple sentence.'
+'Hello world. How are you?' Assert capitalize 'hello world. how are you?'
+'I did today''s coding challenge... It was fun!!' Assert capitalize 'i did today''s coding challenge... it was fun!!'
+'Crazy!!!Strange???Unconventional...Sentences.' Assert capitalize 'crazy!!!strange???unconventional...sentences.'
+'There''s a space before this period . Why is there a space before that period ?' Assert capitalize 'there''s a space before this period . why is there a space before that period ?'
+⍝ ------------------------------------------------------------------------------
 ⎕←'IPv4 Validator'
 ⍝ Given a string, determine if it is a valid IPv4 Address. A valid IPv4 address
 ⍝ consists of four integer numbers separated by dots (.). Each number must
