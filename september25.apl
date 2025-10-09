@@ -7,6 +7,24 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←(⍺) (≡⍺) ⋄ ⎕←(⍵) (≡⍵) ⋄ ⎕SIGNAL 13}  ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Thermostat Adjuster'
+⍝ Given the current temperature of a room and a target temperature, return a
+⍝ string indicating how to adjust the room temperature based on these constraints:
+⍝ Return "heat" if the current temperature is below the target.
+⍝ Return "cool" if the current temperature is above the target.
+⍝ Return "hold" if the current temperature is equal to the target.
+adjust_thermostat←{
+    (</⍵):'heat'
+    (>/⍵):'cool'
+    'hold'
+}
+'heat' Assert adjust_thermostat 68 72
+'cool' Assert adjust_thermostat 75 72
+'hold' Assert adjust_thermostat 72 72
+'heat' Assert adjust_thermostat ¯20.5 ¯10.1
+'cool' Assert adjust_thermostat 100 99.9
+'hold' Assert adjust_thermostat 0.0 0.0
+⍝ ------------------------------------------------------------------------------
 ⎕←'Sentence Capitalizer'
 ⍝ Given a paragraph, return a new paragraph where the first letter of each
 ⍝ sentence is capitalized.

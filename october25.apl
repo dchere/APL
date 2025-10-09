@@ -7,6 +7,33 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Moon Phase'
+⍝ You will be given a date in the format "YYYY-MM-DD" and need to determine the
+⍝ phase of the moon for that day using the following rules:
+⍝ Use a simplified lunar cycle of 28 days, divided into four equal phases:
+⍝ "New": days 1 - 7
+⍝ "Waxing": days 8 - 14
+⍝ "Full": days 15 - 21
+⍝ "Waning": days 22 - 28
+⍝ After day 28, the cycle repeats with day 1, a new moon.
+⍝ Use "2000-01-06" as a reference new moon (day 1 of the cycle) to determine the
+⍝ phase of the given day. You will not be given any dates before the reference date.
+⍝ Return the correct phase as a string.
+moon_phase←{
+    strtonum←{+/(0 1 2 3 4 5 6 7 8 9)['0123456789'⍳⍵]×⌽10*¯1+⍳⍴⍵} ⍝ convert date string to numbers
+    years←¯2000 + strtonum ⍵[⍳4]
+    months←¯1 + strtonum ⍵[6 7]
+    days←¯6 +strtonum ⍵[9 10]
+    days+←+/(31 28 29 31 30 31 30 31 31 30 31 30 31)[⍳months]
+    days+←+/(years×365) (⌊years÷4) (years > 0) ⍝ add leap years
+    ⊃('New' 'Waxing' 'Full' 'Waning')[1+⌊(28|days)÷7]
+}
+'New' Assert moon_phase '2000-01-12'
+'Waxing' Assert moon_phase '2000-01-13'
+'Full' Assert moon_phase '2014-10-15'
+'Waning' Assert moon_phase '2012-10-21'
+'New' Assert moon_phase '2022-12-14'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Goldilocks Zone'
 ⍝ You will calculate the "Goldilocks zone" of a star - the region around a star
 ⍝ where conditions are "just right" for liquid water to exist.
