@@ -7,6 +7,41 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Launch Fuel'
+⍝ You will be given the mass in kilograms (kg) of a payload you want to send to
+⍝ orbit. Determine the amount of fuel needed to send your payload to orbit using
+⍝ the following rules:
+⍝ Rockets require 1 kg of fuel per 5 kg of mass they must lift.
+⍝ Fuel itself has mass. So when you add fuel, the mass to lift goes up, which
+⍝ requires more fuel, which increases the mass, and so on.
+⍝ To calculate the total fuel needed: start with the payload mass, calculate the
+⍝ fuel needed for that, add that fuel to the total mass, and calculate again.
+⍝ Repeat this process until the additional fuel required is less than 1 kg,
+⍝ then stop.
+⍝ Ignore the mass of the rocket itself. Only compute fuel needed to lift the
+⍝ payload and its own fuel.
+⍝ For example, given a payload mass of 50 kg, you would need 10 kg of fuel to
+⍝ lift it (payload / 5), which increases the total mass to 60 kg, which needs
+⍝ 12 kg to lift (2 additional kg), which increases the total mass to 62 kg,
+⍝ which needs 12.4 kg to lift - 0.4 additional kg - which is less 1 additional
+⍝ kg, so we stop here. The total mass to lift is 62.4 kg, 50 of which is the
+⍝ initial payload and 12.4 of fuel.
+⍝ Return the amount of fuel needed rounded to one decimal place.
+launch_fuel←{
+    ⍝ ⎕←0.1×⌊.5 + 10×⍵÷4
+    fuel←{
+        kg←0.1×⌊.5 + 10×⍵÷5
+        (kg-⍺)<1:kg
+        kg fuel ⍵ + kg - ⍺ 
+    }
+    0 fuel ⍵ 
+}
+12.4 Assert launch_fuel 50
+124.8 Assert launch_fuel 500
+60.7 Assert launch_fuel 243
+2749.8 Assert launch_fuel 11000
+1553.4 Assert launch_fuel 6214
+⍝ ------------------------------------------------------------------------------
 ⎕←'Moon Phase'
 ⍝ You will be given a date in the format "YYYY-MM-DD" and need to determine the
 ⍝ phase of the moon for that day using the following rules:
@@ -101,7 +136,7 @@ find_landing_spot←{
 ⍝ Each satellite the message passes through adds a 0.5 second transmission delay.
 ⍝ Return a number rounded to 4 decimal places, with trailing zeros removed.
 send_message←{
-  0.0001×⌊.5 + +/(((¯1+⍴⍵)⍴5000),0) + ⍵÷30  
+    0.0001×⌊.5 + +/(((¯1+⍴⍵)⍴5000),0) + ⍵÷30  
 }
 2.5 Assert send_message 300000 300000
 3.0627 Assert send_message 384400 384400
