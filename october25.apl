@@ -7,6 +7,22 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Hex to Decimal'
+⍝ Given a string representing a hexadecimal number (base 16), return its decimal
+⍝ (base 10) value as an integer.
+⍝ Hexadecimal is a number system that uses 16 digits:
+⍝ 0-9 represent values 0 through 9.
+⍝ A-F represent values 10 through 15.
+⍝ The string will only contain characters 0–9 and A–F.
+hex_to_decimal←{
+    +/((0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15)['0123456789ABCDEF'⍳⌽⍵])×16*¯1+⍳⍴⍵
+}
+10 Assert hex_to_decimal 1⍴'A'
+21 Assert hex_to_decimal '15'
+46 Assert hex_to_decimal '2E'
+255 Assert hex_to_decimal 'FF'
+2623 Assert hex_to_decimal 'A3F'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Launch Fuel'
 ⍝ You will be given the mass in kilograms (kg) of a payload you want to send to
 ⍝ orbit. Determine the amount of fuel needed to send your payload to orbit using

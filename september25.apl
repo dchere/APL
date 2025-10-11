@@ -7,6 +7,27 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←(⍺) (≡⍺) ⋄ ⎕←(⍵) (≡⍵) ⋄ ⎕SIGNAL 13}  ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Word Frequency'
+⍝ Given a paragraph, return an array of the three most frequently occurring words.
+⍝ Words in the paragraph will be separated by spaces.
+⍝ Ignore case in the given paragraph. For example, treat Hello and hello as the same word.
+⍝ Ignore punctuation in the given paragraph. Punctuation consists of commas (,), periods (.), and exclamation points (!).
+⍝ The returned array should have all lowercase words.
+⍝ The returned array should be in descending order with the most frequently occurring word first.
+get_words←{
+    s←(~⍵∊'.,!')/⍵ ⍝ remove punctuation
+    lower←'abcdefghijklmnopqrstuvwxyz'
+    upper←'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    mask←s∊upper ⍝ boolean mask to convert to lowercase
+    (mask/s)←lower[upper⍳(mask/s)]
+    words←{(' '≠⍵)/⍵}¨(' '(,⊂⍨⊣=,)⊢)s
+    uwords←∪words
+    3↑uwords[⍒+/uwords∘.≡words]
+}
+'coding' 'python' 'in' Assert get_words 'Coding in Python is fun because coding Python allows for coding in Python easily while coding'
+(1⍴'i') 'like' 'coding' Assert get_words 'I like coding. I like testing. I love debugging!'
+'debug' 'test' 'deploy' Assert get_words 'Debug, test, deploy. Debug, debug, test, deploy. Debug, test, test, deploy!'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Thermostat Adjuster'
 ⍝ Given the current temperature of a room and a target temperature, return a
 ⍝ string indicating how to adjust the room temperature based on these constraints:
