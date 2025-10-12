@@ -7,6 +7,143 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←(⍺) (≡⍺) ⋄ ⎕←(⍵) (≡⍵) ⋄ ⎕SIGNAL 13}  ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Missing Numbers'
+⍝ Given an array of integers from 1 to n, inclusive, return an array of all
+⍝ the missing integers between 1 and n (where n is the largest number in the
+⍝ given array).
+⍝ The given array may be unsorted and may contain duplicates.
+⍝ The returned array should be in ascending order.
+⍝ If no integers are missing, return an empty array.
+find_missing_numbers←{(⍳⌈/⍵)~∪⍵}
+
+(0⍴0) Assert find_missing_numbers 1 2 3 4 5
+2 4 Assert find_missing_numbers 1 3 5
+(0⍴0) Assert find_missing_numbers 1 2 3 4 5
+2 3 4 5 6 7 8 9 Assert find_missing_numbers 1 10
+2 3 4 5 6 7 8 9 Assert find_missing_numbers 10 1 10 1 10 1
+2 6 7 8 Assert find_missing_numbers 3 1 4 1 5 9
+(1⍴11) Assert find_missing_numbers 1 2 3 4 5 7 8 9 10 12 6 8 9 3 2 10 7 4
+⍝ ------------------------------------------------------------------------------
+⎕←'Screen Time'
+⍝ Given an input array of seven integers, representing a week's time, where each
+⍝ integer is the amount of hours spent on your phone that day, determine if it
+⍝ is too much screen time based on these constraints:
+⍝ If any single day has 10 hours or more, it's too much.
+⍝ If the average of any three days in a row is greater than or equal to 8 hours,
+⍝ it’s too much.
+⍝ If the average of the seven days is greater than or equal to 6 hours, it's too
+⍝ much.
+too_much_screen_time←{
+    (∨/10≤⍵):1
+    (∨/24≤3 +/⍵):1
+    (42≤+/⍵):1
+    0
+}
+0 Assert too_much_screen_time 1 2 3 4 5 6 7
+0 Assert too_much_screen_time 7 8 8 4 2 2 3
+0 Assert too_much_screen_time 5 6 6 6 6 6 6
+1 Assert too_much_screen_time 1 2 3 11 1 3 4
+1 Assert too_much_screen_time 1 2 3 10 2 1 0
+1 Assert too_much_screen_time 3 3 5 8 8 9 4
+1 Assert too_much_screen_time 3 9 4 8 5 7 6
+⍝ ------------------------------------------------------------------------------
+⎕←'Reverse Sentence'
+⍝ Given a string of words, return a new string with the words in reverse order.
+⍝ For example, the first word should be at the end of the returned string, and
+⍝ the last word should be at the beginning of the returned string.
+⍝ In the given string, words can be separated by one or more spaces.
+⍝ The returned string should only have one space between words.
+reverse_sentence←{
+    words←{' ',(' '≠⍵)/⍵}¨(' '(,⊂⍨⊣=,)⊢)⍵
+    words←(1<⊃¨⍴¨words)/words
+    1↓⊃,/⌽words
+}
+'hello world' Assert reverse_sentence 'world hello'
+'git commit push' Assert reverse_sentence 'push commit git'
+'sudo apt install npm' Assert reverse_sentence 'npm  install   apt    sudo'
+'export function default import' Assert reverse_sentence 'import    default   function  export'
+⍝ ------------------------------------------------------------------------------
+⎕←'Array Diff'
+⍝ Given two arrays with strings values, return a new array containing all the
+⍝ values that appear in only one of the arrays.
+⍝ The returned array should be sorted in alphabetical order.
+array_diff←{
+    a b←⍵
+    w←(a∪b)~(a∩b)
+    w[⍋w]
+}
+(1⍴⊂'banana') Assert array_diff ('apple' 'banana') (1⍴⊂'apple')
+(1⍴⊂'cherry') Assert array_diff ('apple' 'banana') ('apple' 'banana' 'cherry')
+(1⍴⊂'cherry') Assert array_diff ('apple' 'banana' 'cherry') ('apple' 'banana')
+'eight' 'four' 'six' 'two' Assert array_diff ('one' 'two' 'three' 'four' 'six') ('one' 'three' 'eight')
+'five' 'one' 'seven' 'three' Assert array_diff ('two' 'four' 'five' 'eight') ('one' 'two' 'three' 'four' 'seven' 'eight')
+'freeCodeCamp' 'rocks' array_diff ('I' 'like' 'freeCodeCamp') ('I' 'like' 'rocks')
+⍝ ------------------------------------------------------------------------------
+⎕←'Unique Characters'
+⍝ Given a string, determine if all the characters in the string are unique.
+⍝ Uppercase and lowercase letters should be considered different characters.
+all_unique←{(⍴∪⍵)≡(⍴⍵)}
+1 Assert all_unique 'abc'
+1 Assert all_unique 'aA'
+1 Assert all_unique 'QwErTy123!@'
+1 Assert all_unique '~!@#$%^&*()_+'
+0 Assert all_unique 'hello'
+0 Assert all_unique 'freeCodeCamp'
+0 Assert all_unique '!@#*$%^&*()aA'
+⍝ ------------------------------------------------------------------------------
+⎕←'Acronym Builder'
+⍝ Given a string containing one or more words, return an acronym of the words
+⍝ using the following constraints:
+⍝ The acronym should consist of the first letter of each word capitalized,
+⍝ unless otherwise noted.
+⍝ The acronym should ignore the first letter of these words unless they are the
+⍝ first word of the given string: a, for, an, and, by, and of.
+⍝ The acronym letters should be returned in the order they are given.
+⍝ The acronym should not contain any spaces.
+build_acronym←{
+    lower←'abcdefghijklmnopqrstuvwxyz'
+    upper←'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    words←{(⍵∊upper,lower)/⍵}¨(' '(,⊂⍨⊣=,)⊢)⍵
+    words←{w←⍵ ⋄ ((w∊lower)/w)←upper[lower⍳(w∊lower)/w] ⋄ w}¨words
+    words←(1,~(1↓words)∊(⊂'A') 'FOR' 'AN' 'AND' 'BY' 'OF')/words
+    {⊃⍵}¨words
+}
+'SEO' Assert build_acronym 'Search Engine Optimization'
+'FAQ' Assert build_acronym 'Frequently Asked Questions'
+'NASA' Assert build_acronym 'National Aeronautics and Space Administration'
+'FBI' Assert build_acronym 'Federal Bureau of Investigation'
+'FYI' Assert build_acronym 'For your information'
+'BTW' Assert build_acronym 'By the way'
+'AUHWPOTIMSH' Assert build_acronym 'An unstoppable herd of waddling penguins overtakes the icy mountains and sings happily'
+⍝ ------------------------------------------------------------------------------
+⎕←'Roman Numeral Parser'
+⍝ Given a string representing a Roman numeral, return its integer value.
+⍝ Roman numerals consist of the following symbols and values:
+⍝ Symbol	Value
+⍝ I	        1
+⍝ V	        5
+⍝ X	        10
+⍝ L	        50
+⍝ C	        100
+⍝ D	        500
+⍝ M	        1000
+⍝ Numerals are read left to right. If a smaller numeral appears before a larger
+⍝ one, the value is subtracted. Otherwise, values are added.
+parse_roman_numeral←{
+    roman←'IVXLCDM'
+    values←1 5 10 50 100 500 1000
+    nums←values[roman⍳⍵]
+    ((2 </nums,0)/nums)×←¯1
+    +/nums
+}
+3 Assert parse_roman_numeral 'III'
+4 Assert parse_roman_numeral 'IV'
+26 Assert parse_roman_numeral 'XXVI'
+99 Assert parse_roman_numeral 'XCIX'
+460 Assert parse_roman_numeral 'CDLX'
+504 Assert parse_roman_numeral 'DIV'
+2025 Assert parse_roman_numeral 'MMXXV'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Word Frequency'
 ⍝ Given a paragraph, return an array of the three most frequently occurring words.
 ⍝ Words in the paragraph will be separated by spaces.
