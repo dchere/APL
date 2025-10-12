@@ -7,6 +7,42 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Battle of Words'
+⍝ Given two sentences representing your team and an opposing team, where each
+⍝ word from your team battles the corresponding word from the opposing team,
+⍝ determine which team wins using the following rules:
+⍝ The given sentences will always contain the same number of words.
+⍝ Words are separated by a single space and will only contain letters.
+⍝ The value of each word is the sum of its letters.
+⍝ Letters a to z correspond to the values 1 through 26.
+⍝ A capital letter doubles the value of the letter. For example, A is 2.
+⍝ Words battle in order: the first word of your team battles the first word of
+⍝ the opposing team, and so on.
+⍝ A word wins if its value is greater than the opposing word's value.
+⍝ The team with more winning words is the winner.
+⍝ Return "We win" if your team is the winner,
+⍝ "We lose" if your team loses,
+⍝ and "Draw" if both teams have the same number of wins.
+battle←{
+    lower←'abcdefghijklmnopqrstuvwxyz'
+    upper←'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    split←{{(' '≠⍵)/⍵}¨(' '(,⊂⍨⊣=,)⊢)⍵}
+    calcWord←{+/((⍳26)[lower⍳(⍵∊lower)/⍵]),2×((⍳26)[upper⍳(⍵∊upper)/⍵])}
+    a←calcWord¨split ⊃⍵
+    b←calcWord¨split 2⊃⍵
+    a b←(+/a>b) (+/b>a)
+    (a>b):'We win'
+    (a<b):'We lose'
+    'Draw'
+}
+'We win' Assert battle 'hello world' 'hello word'
+'We win' Assert battle 'Hello world' 'hello world'
+'We lose' Assert battle 'lorem ipsum' 'kitty ipsum'
+'Draw' Assert battle 'hello world' 'world hello'
+'We win' Assert battle 'git checkout' 'git switch'
+'We lose' Assert battle 'Cheeseburger with fries' 'Cheeseburger with Fries'
+'Draw' Assert battle 'We must never surrender' 'Our team must win'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Hex to Decimal'
 ⍝ Given a string representing a hexadecimal number (base 16), return its decimal
 ⍝ (base 10) value as an integer.
