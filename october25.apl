@@ -7,6 +7,24 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'24 to 12'
+⍝ Given a string representing a time of the day in the 24-hour format of "HHMM",
+⍝ return the time in its equivalent 12-hour format of "H:MM AM" or "H:MM PM".
+
+⍝ The given input will always be a four-digit string in 24-hour time format,
+⍝ from "0000" to "2359".
+to_12←{
+    hh←+/10 1×(0 1 2 3 4 5 6 7 8 9)['0123456789'⍳⍵[1 2]]
+    post←⊃(' PM' ' AM')[1+hh<12]
+    hh←⊃('12' '1' '2' '3' '4' '5' '6' '7' '8' '9' '10' '11')[1+12|hh]
+    hh,':',⍵[3 4],post
+}
+'11:24 AM' Assert to_12 '1124'
+'9:00 AM' Assert to_12 '0900'
+'2:55 PM' Assert to_12 '1455'
+'11:46 PM' Assert to_12 '2346'
+'12:30 AM' Assert to_12 '0030'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Battle of Words'
 ⍝ Given two sentences representing your team and an opposing team, where each
 ⍝ word from your team battles the corresponding word from the opposing team,
