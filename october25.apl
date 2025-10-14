@@ -7,6 +7,21 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'String Count'
+⍝ Given two strings, determine how many times the second string appears in the
+⍝ first.
+⍝ The pattern string can overlap in the first string. For example, "aaa"
+⍝ contains "aa" twice. The first two a's and the second two.
+count←{
+    s sub←⍵
+    +/{sub≡⍵}¨(⊃⍴sub) ,/s
+}
+1 Assert count 'abcdefg' 'def'
+0 Assert count 'hello' 'world'
+2 Assert count 'mississippi' 'iss'
+3 Assert count 'she sells seashells by the seashore' 'sh'
+10 Assert count '101010101010101010101' '101'
+⍝ ------------------------------------------------------------------------------
 ⎕←'24 to 12'
 ⍝ Given a string representing a time of the day in the 24-hour format of "HHMM",
 ⍝ return the time in its equivalent 12-hour format of "H:MM AM" or "H:MM PM".
