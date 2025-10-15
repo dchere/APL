@@ -7,6 +7,23 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'HTML Tag Stripper'
+⍝ Given a string of HTML code, remove the tags and return the plain text content.
+⍝ The input string will contain only valid HTML.
+⍝ HTML tags may be nested.
+⍝ Remove the tags and any attributes.
+⍝ For example, '<a href="#">Click here</a>' should return "Click here".
+strip_tags←{
+    (~'<'∊⍵):⍵
+    ix←((∨\⍵='<')^~∨\⍵='>')/⍳⍴⍵
+    ix,←1+¯1↑ix
+    strip_tags ⍵[(⍳⍴⍵)~ix] ⍝ recursive call until no more tags
+}
+'Click here' Assert strip_tags '<a href="#">Click here</a>'
+'Hello World!' Assert strip_tags '<p class="center">Hello <b>World</b>!</p>'
+(0⍴'  ') Assert strip_tags '<img src="cat.jpg" alt="Cat">'
+'sectionsection' Assert strip_tags '<main id="main"><section class="section">section</section><section class="section">section</section></main>'
+⍝ ------------------------------------------------------------------------------
 ⎕←'String Count'
 ⍝ Given two strings, determine how many times the second string appears in the
 ⍝ first.
