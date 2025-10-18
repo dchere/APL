@@ -7,6 +7,32 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Missing Socks'
+⍝ Given an integer representing the number of pairs of socks you started with,
+⍝ and another integer representing how many wash cycles you have gone through,
+⍝ return the number of complete pairs of socks you currently have using the
+⍝ following constraints:
+⍝ Every 2 wash cycles, you lose a single sock.
+⍝ Every 3 wash cycles, you find a single missing sock.
+⍝ Every 5 wash cycles, a single sock is worn out and must be thrown away.
+⍝ Every 10 wash cycles, you buy a pair of socks.
+⍝ You can never have less than zero total socks.
+⍝ Rules can overlap. For example, on wash cycle 10, you will lose a single sock,
+⍝ throw away a single sock, and buy a new pair of socks.
+⍝ Return the number of complete pairs of socks.
+sock_pairs←{
+    socks cycles←⍵
+    socks←socks×2 ⍝ convert to individual socks
+    socks+←+/¯1 1 ¯1 2×⌊cycles÷2 3 5 10 ⍝ apply rules
+    socks←0⌈⌊socks÷2 ⍝ ensure non-negative and convert back to pairs
+    socks
+}
+1 Assert sock_pairs 2 5
+0 Assert sock_pairs 1 2
+4 Assert sock_pairs 5 11
+3 Assert sock_pairs 6 25
+0 Assert sock_pairs 1 8
+⍝ ------------------------------------------------------------------------------
 ⎕←'Credit Card Masker'
 ⍝ Given a string of credit card numbers, return a masked version of it using the
 ⍝ following constraints:
