@@ -5,7 +5,6 @@
 ⍝ & ¯ ⍬ ∆ ⍙
 
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
-
 ⍝ ------------------------------------------------------------------------------
 ⎕←'HTML Attribute Extractor'
 ⍝ Given a string of a valid HTML element, return the attributes of the element
@@ -17,24 +16,20 @@ Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNA
 ⍝ Return attributes in the order they are given.
 ⍝ If no attributes are found, return an empty array.
 extract_attributes←{
-    lx←∨\'>'=⍵
-    other←1↓lx/⍵
-    lx←∨\'<'=tag←(~lx)/⍵
-    split←{{(' '≠⍵)/⍵}¨(' '(,⊂⍨⊣=,)⊢)⍵}tag←1↓lx/tag
-    attrs←{
-        ~'='∊⍵:''
-        attr value←{('='≠⍵)/⍵}¨('='(,⊂⍨⊣=,)⊢)⍵
-        attr,', ',¯1↓1↓value
-    }¨split
-    attrs←(0<⊃¨⍴¨attrs)/attrs
-    ('='∊other):attrs,extract_attributes other
-    attrs
+    (0=⊃⍴⍵):0⍴⊂''
+    (0=⊃⍴i←({'="'≡⍵}¨2 ,/⍵)/⍳¯1+⍴⍵):0⍴⊂'' ⍝ no attributes
+    i←⊃i
+    attr←⍵[⍳¯1+i]
+    attr←(-¯1+⊃(' '=⌽attr)/⍳⍴attr)↑attr
+    value←⍵[(⍳⍴⍵)~⍳1+i]
+    value←(~∨\value='"')/value
+    ,(⊂attr,', ',value),extract_attributes ⍵[(⍳⍴⍵)~⍳i+2+⍴value]
 }
 (1⍴⊂'class, red') Assert extract_attributes '<span class="red"></span>'
 (1⍴⊂'charset, UTF-8') Assert extract_attributes '<meta charset="UTF-8" />'
 (0⍴⊂'') Assert extract_attributes '<p>Lorem ipsum dolor sit amet</p>'
 'name, email' 'type, email' 'required, true' Assert extract_attributes '<input name="email" type="email" required="true" />'
-'id, submit' 'class, btn-primary' Assert extract_attributes '<button id="submit" class="btn-primary">Submit</button>'
+'id, submit' 'class, btn btn-primary' Assert extract_attributes '<button id="submit" class="btn btn-primary">Submit</button>'
 ⍝ ------------------------------------------------------------------------------
 ⎕←'Missing Socks'
 ⍝ Given an integer representing the number of pairs of socks you started with,
