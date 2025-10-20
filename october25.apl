@@ -4,7 +4,29 @@
 ⍝ ⍳ ⍸ ∊ ⍷ ∪ ∩ ~ / \ ⌿ ⍀ , ⍪ ⍴ ⌽ ⊖ ⍉ ¨ ⍨ ⍣ . ∘ ⍛ ⍤ ⍥ @ ⍞ ⎕ ⍠ ⌸ ⌺ ⌶ ⍎ ⍕ ⋄ → ⍵ ⍺ ∇
 ⍝ & ¯ ⍬ ∆ ⍙
 
-Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (⍴⍺) ⋄ ⎕←⍵ (⍴⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
+Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
+
+⍝ ------------------------------------------------------------------------------
+⎕←'Tip Calculator'
+⍝ Given the price of your meal and a custom tip percent, return an array with
+⍝ three tip values; 15%, 20%, and the custom amount.
+⍝ Prices will be given in the format: "$N.NN".
+⍝ Custom tip percents will be given in this format: "25%".
+⍝ Return amounts in the same "$N.NN" format, rounded to two decimal places.
+⍝For example, given a "$10.00" meal price, and a "25%" custom tip value,
+⍝ return ["$1.50", "$2.00", "$2.50"].
+calculate_tips←{
+    price tip←⍵
+    digits←'0123456789'
+    ds←0 1 2 3 4 5 6 7 8 9
+    str_to_num←{+/(ds[digits⍳⍵])×⌽10*¯1+⍳⍴⍵} ⍝ convert string to number
+    price←0.01×str_to_num (price∊digits)/price ⍝ extract numeric part of price
+    tip←0.01×str_to_num ¯1↓tip
+    {'$',(⍵≠' ')/⍵}¨↓'F6.2' ⎕FMT 0.01×⌊.5 + 100 × 0.15 0.2 tip × price
+}
+'$1.50' '$2.00' '$2.50' Assert calculate_tips '$10.00' '25%'
+'$13.45' '$17.93' '$23.31' Assert calculate_tips '$89.67' '26%'
+'$2.98' '$3.97' '$1.79' Assert calculate_tips '$19.85' '9%'
 ⍝ ------------------------------------------------------------------------------
 ⎕←'HTML Attribute Extractor'
 ⍝ Given a string of a valid HTML element, return the attributes of the element
