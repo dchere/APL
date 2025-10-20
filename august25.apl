@@ -458,7 +458,6 @@ factorial←{
 ⍝ squared from 1 up to the number.
 sum_of_squares←{
     +/(⍳⍵)*2
-
 }
 55 Assert sum_of_squares 5
 385 Assert sum_of_squares 10
