@@ -7,13 +7,42 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Thermostat Adjuster 2'
+⍝ Given the current temperature of a room in Fahrenheit and a target temperature
+⍝ in Celsius, return a string indicating how to adjust the room temperature
+⍝ based on these constraints:
+⍝ Return "Heat: X degrees Fahrenheit" if the current temperature is below the
+⍝ target. With X being the number of degrees in Fahrenheit to heat the room to
+⍝ reach the target, rounded to 1 decimal place.
+⍝ Return "Cool: X degrees Fahrenheit" if the current temperature is above the
+⍝ target. With X being the number of degrees in Fahrenheit to cool the room to
+⍝ reach the target, rounded to 1 decimal place.
+⍝ Return "Hold" if the current temperature is equal to the target.
+⍝ To convert Celsius to Fahrenheit, multiply the Celsius temperature by 1.8 and
+⍝ add 32 to the result (F = (C * 1.8) + 32).
+adjust_thermostat←{
+    current target←⍵
+    targetF←32 + 1.8×target
+    diff←0.1×⌊.5 + 10×(targetF - current)
+    sgn←×diff
+    diff←{(⍵≠' ')/⍵} ,'F6.1' ⎕FMT sgn×diff
+    (0=sgn):'Hold'
+    (sgn>0):'Heat: ',diff,' degrees Fahrenheit'
+    'Cool: ',diff,' degrees Fahrenheit'
+}
+'Hold' Assert adjust_thermostat 32 0
+'Heat: 7.0 degrees Fahrenheit' Assert adjust_thermostat 70 25
+'Cool: 7.6 degrees Fahrenheit' Assert adjust_thermostat 72 18
+'Hold' Assert adjust_thermostat 212 100
+'Heat: 12.6 degrees Fahrenheit' Assert adjust_thermostat 59 22
+⍝ ------------------------------------------------------------------------------
 ⎕←'Tip Calculator'
 ⍝ Given the price of your meal and a custom tip percent, return an array with
 ⍝ three tip values; 15%, 20%, and the custom amount.
 ⍝ Prices will be given in the format: "$N.NN".
 ⍝ Custom tip percents will be given in this format: "25%".
 ⍝ Return amounts in the same "$N.NN" format, rounded to two decimal places.
-⍝For example, given a "$10.00" meal price, and a "25%" custom tip value,
+⍝ For example, given a "$10.00" meal price, and a "25%" custom tip value,
 ⍝ return ["$1.50", "$2.00", "$2.50"].
 calculate_tips←{
     price tip←⍵
