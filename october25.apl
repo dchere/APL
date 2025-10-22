@@ -7,6 +7,41 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Speak Wisely, You Must'
+⍝ Given a sentence, return a version of it that sounds like advice from a wise
+⍝ teacher using the following rules:
+⍝ Words are separated by a single space.
+⍝ Find the first occurrence of one of the following words in the sentence:
+⍝ "have", "must", "are", "will", "can".
+⍝ Move all words before and including that word to the end of the sentence and:
+⍝ Preserve the order of the words when you move them.
+⍝ Make them all lowercase.
+⍝ And add a comma and space before them.
+⍝ Capitalize the first letter of the new first word of the sentence.
+⍝ All given sentences will end with a single punctuation mark. Keep the original
+⍝ punctuation of the sentence and move it to the end of the new sentence.
+⍝ Return the new sentence, make sure there's a single space between each word
+⍝ and no spaces at the beginning or end of the sentence.
+⍝ For example, given "You must speak wisely." return "Speak wisely, you must."
+wise_speak←{
+    punctuation←¯1↑⍵
+    s←(¯1↓⍵)
+    words←'have' 'must' 'are' 'will' 'can'
+    ix←{(¯1+⍴⍵)+((⊂⍵)≡¨(⊃⍴⍵) ,/s)/⍳(⍴s)-(⍴⍵)-1}¨words
+    ix←⊃(0<⊃¨⍴¨ix)/ix
+    lower←'abcdefghijklmnopqrstuvwxyz'
+    upper←'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    (1↑s)←lower[upper⍳1↑s]
+    w←s[(⍳⍴s)~⍳1+ix],', ',s[⍳ix],punctuation
+    (1↑w)←upper[lower⍳1↑w]
+    w
+}
+'Speak wisely, you must.' Assert wise_speak 'You must speak wisely.'
+'Do it, you can!' Assert wise_speak 'You can do it!'
+'Complete this, do you think you will?' Assert wise_speak 'Do you think you will complete this?'
+'Belong to us, all your base are.' Assert wise_speak 'All your base are belong to us.'
+'Much to learn, you have.' Assert wise_speak 'You have much to learn.'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Thermostat Adjuster 2'
 ⍝ Given the current temperature of a room in Fahrenheit and a target temperature
 ⍝ in Celsius, return a string indicating how to adjust the room temperature
