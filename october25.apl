@@ -7,6 +7,22 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Favorite Songs'
+⍝ Remember iPods? The first model came out 24 years ago today, on Oct. 23, 2001.
+⍝ Given an array of song objects representing your iPod playlist, return an
+⍝ array with the titles of the two most played songs, with the most played song
+⍝ first.
+⍝ Each object will have a "title" property (string), and a "plays" property
+⍝ (integer).
+favorite_songs←{
+    titles←2⊃¨⊃¨⍵
+    plays←2⊃¨2⊃¨⍵
+    2↑titles[⍒plays] ⍝ 2 first titles of songs sorted by plays descending
+}
+'Sync or Swim' 'Earbud Blues' Assert favorite_songs (('title' 'Sync or Swim') ('plays' 3)) (('title' 'Byte Me') ('plays' 1)) (('title' 'Earbud Blues') ('plays' 2))
+'Clickwheel Love' '99 Downloads' Assert favorite_songs (('title' 'Skip Track') ('plays' 98)) (('title' '99 Downloads') ('plays' 99)) (('title' 'Clickwheel Love') ('plays' 100))
+'Song B' 'Song C' Assert favorite_songs (('title' 'Song A') ('plays' 42)) (('title' 'Song B') ('plays' 99)) (('title' 'Song C') ('plays' 75))
+⍝ ------------------------------------------------------------------------------
 ⎕←'Speak Wisely, You Must'
 ⍝ Given a sentence, return a version of it that sounds like advice from a wise
 ⍝ teacher using the following rules:
