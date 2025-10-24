@@ -7,6 +7,47 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Hidden Treasure'
+⍝ Given a 2D array representing a map of the ocean floor that includes a hidden
+⍝ treasure, and an array with the coordinates ([row, column]) for the next dive
+⍝ of your treasure search, return "Empty", "Found", or "Recovered" using the
+⍝ following rules:
+⍝ The given 2D array will contain exactly one unrecovered treasure, which will
+⍝ occupy multiple cells.
+⍝ Each cell in the 2D array will contain one of the following values:
+⍝ "-": No treasure.
+⍝ "O": A part of the treasure that has not been found.
+⍝ "X": A part of the treasure that has already been found.
+⍝ If the dive location has no treasure, return "Empty".
+⍝ If the dive location finds treasure, but at least one other part of the
+⍝ treasure remains unfound, return "Found".
+⍝ If the dive location finds the last unfound part of the treasure, return
+⍝ "Recovered".
+⍝ For example, given:
+⍝ [
+⍝   [ "-", "X"],
+⍝   [ "-", "X"],
+⍝   [ "-", "O"]
+⍝ ]
+⍝ And [2, 1] for the coordinates of the dive location, return "Recovered"
+⍝ because the dive found the last unfound part of the treasure.
+dive←{
+    map coords←⍵
+    r c←1 + coords
+    ('-'=c⊃r⊃map): 'Empty'
+    (c⊃r⊃map)←'X' ⍝ mark found
+    (∨/{∨/'O'=⍵}¨map): 'Found'
+    'Recovered'
+    
+    'Empty' ⍝ already found part
+}
+'Recovered' Assert dive (('-' 'X') ('-' 'X') ('-' 'O')) (2 1)
+'Empty' Assert dive (('-' 'X') ('-' 'X') ('-' 'O')) (2 0)
+'Found' Assert dive (('-' 'X') ('-' 'O') ('-' 'O')) (1 1)
+'Found' Assert dive (('-' '-' '-') ('X' 'O' 'X') ('-' '-' '-')) (1 2)
+'Recovered' Assert dive (('-' '-' '-') ('-' '-' '-') ('O' 'X' 'X')) (2 0)
+'Empty' Assert dive (('-' '-' '-') ('-' '-' '-') ('O' 'X' 'X')) (1 2)
+⍝ ------------------------------------------------------------------------------
 ⎕←'Favorite Songs'
 ⍝ Remember iPods? The first model came out 24 years ago today, on Oct. 23, 2001.
 ⍝ Given an array of song objects representing your iPod playlist, return an
