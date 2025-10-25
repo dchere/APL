@@ -7,6 +7,21 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Complementary DNA'
+⍝ Given a string representing a DNA sequence, return its complementary strand
+⍝ using the following rules:
+⍝ DNA consists of the letters "A", "C", "G", and "T".
+⍝ The letters "A" and "T" complement each other.
+⍝ The letters "C" and "G" complement each other.
+⍝ For example, given "ACGT", return "TGCA".
+complementary_dna←{
+    'TAGC'['ATCG'⍳⍵]
+}
+'TGCA' Assert complementary_dna 'ACGT'
+'TACGCATGCAATCG' Assert complementary_dna 'ATGCGTACGTTAGC'
+'CCGAATGCTAGCTTC' Assert complementary_dna 'GGCTTACGATCGAAG'
+'CTAGATCGATCCGATCGATC' Assert complementary_dna 'GATCTAGCTAGGCTAGCTAG'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Hidden Treasure'
 ⍝ Given a 2D array representing a map of the ocean floor that includes a hidden
 ⍝ treasure, and an array with the coordinates ([row, column]) for the next dive
