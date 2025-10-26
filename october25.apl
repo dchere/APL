@@ -7,6 +7,34 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Duration Formatter'
+⍝ Given an integer number of seconds, return a string representing the same
+⍝ duration in the format "H:MM:SS", where "H" is the number of hours, "MM" is
+⍝ the number of minutes, and "SS" is the number of seconds. Return the time
+⍝ using the following rules:
+⍝ Seconds: Should always be two digits.
+⍝ Minutes: Should omit leading zeros when they aren't needed. Use "0" if the
+⍝ duration is less than one minute.
+⍝ Hours: Should be included only if they're greater than zero.
+format←{
+    ss←⍵
+    hh←⌊ss÷3600
+    ss-←3600×hh
+    mm←⌊ss÷60
+    ss-←60×mm
+    ss←¯2↑'0',⍕ss
+    (0=hh+mm):'0:',ss
+    ((0=hh)^mm<10):(⍕mm),':',ss
+    mm←¯2↑'0',⍕mm
+    (0=hh):mm,':',ss
+    (⍕hh),':',mm,':',ss
+}
+'8:20' Assert format 500
+'1:06:40' Assert format 4000
+'0:01' Assert format 1
+'1:32:35' Assert format 5555
+'27:46:39' Assert format 99999
+⍝ ------------------------------------------------------------------------------
 ⎕←'Complementary DNA'
 ⍝ Given a string representing a DNA sequence, return its complementary strand
 ⍝ using the following rules:
