@@ -7,6 +7,18 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Integer Sequence'
+⍝ Given a positive integer, return a string with all of the integers from 1 up
+⍝ to, and including, the given number, in numerical order.
+⍝ For example, given 5, return "12345".
+sequence←{
+    ⊃,/⍕¨⍳⍵
+}
+'12345' Assert sequence 5
+'12345678910' Assert sequence 10
+(1⍴'1') Assert sequence 1
+'123456789101112131415161718192021222324252627' Assert sequence 27
+⍝ ------------------------------------------------------------------------------
 ⎕←'Duration Formatter'
 ⍝ Given an integer number of seconds, return a string representing the same
 ⍝ duration in the format "H:MM:SS", where "H" is the number of hours, "MM" is
