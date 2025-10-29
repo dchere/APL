@@ -7,7 +7,49 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
-⍝ ⎕←'Navigator'
+⎕←'Email Sorter'
+⍝ On October 29, 1971, the first email ever was sent, introducing the
+⍝ username@domain format we still use. Now, there are billions of email addresses.
+⍝ You are given a list of email addresses and need to sort them alphabetically
+⍝ by domain name first (the part after the @), and username second (the part
+⍝ before the @).
+⍝ Sorting should be case-insensitive.
+⍝ If more than one email has the same domain, sort them by their username.
+⍝ Return an array of the sorted addresses.
+⍝ Returned addresses should retain their original case.
+⍝ For example, given ["jill@mail.com", "john@example.com", "jane@example.com"],
+⍝ return ["jane@example.com", "john@example.com", "jill@mail.com"].
+sort←{
+    lowercase uppercase←'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    emails←{
+        lx←∨\⍵='@'
+        username←(~lx)/⍵
+        domain←1↓lx/⍵
+        ((username∊uppercase)/username)←lowercase[uppercase⍳(username∊uppercase)/username]
+        ((domain∊uppercase)/domain)←lowercase[uppercase⍳(domain∊uppercase)/domain]
+        username domain
+    }¨⍵
+    usernames←⊃¨emails
+    domains←2⊃¨emails
+    ⍝ Sort by domain 
+    ix←⍋domains
+    domains←domains[ix]
+    usernames←usernames[ix]
+    emails←⍵[ix]
+    ⍝ and then by username, where domains are equal
+    domainsm←(∪domains)∘.≡domains
+    ix←⊃,/{
+        ix[⍋usernames[ix←(domainsm[⍵;]×⍳⍴domains)~0]]
+    }¨⍳⊃⍴domainsm
+    emails[ix]
+}
+'jane@example.com' 'john@example.com' 'jill@mail.com' Assert sort 'jill@mail.com' 'john@example.com' 'jane@example.com'
+'bob@mail.com' 'carol@mail.com' 'alice@zoo.com' sort 'bob@mail.com' 'alice@zoo.com' 'carol@mail.com'
+'user@x.com' 'user@y.com' 'user@z.com' sort 'user@z.com' 'user@y.com' 'user@x.com'
+'amy@mail.COM' 'bob@Mail.com' 'sam@MAIL.com' sort 'sam@MAIL.com' 'amy@mail.COM' 'bob@Mail.com'
+'SAM@ALPHA.com' 'sammy@alpha.com' 'sara@alpha.com' 'Sarah@Alpha.com' 'simon@beta.com' 'Simone@Beta.com' sort 'simon@beta.com' 'sammy@alpha.com' 'Sarah@Alpha.com' 'SAM@ALPHA.com' 'Simone@Beta.com' 'sara@alpha.com'
+⍝ ------------------------------------------------------------------------------
+⎕←'Navigator'
 ⍝ On October 28, 1994, Netscape Navigator was released, helping millions explore
 ⍝ the early web.
 ⍝ Given an array of browser commands you executed on Netscape Navigator, return
@@ -24,13 +66,29 @@ Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (
 ⍝ "Forward": Takes you forward in the history to the page you came from or stays
 ⍝ on the current page if there isn't one.
 ⍝ For example, given ["Visit About Us", "Back", "Forward"], return "About Us".
-⍝ 'About Us' Assert navigate 'Visit About Us' 'Back' 'Forward'
-⍝ 'Home' Assert navigate 'Forward'
-⍝ 'Home' Assert navigate 'Back'
-⍝ 'Gallery' Assert navigate 'Visit About Us' 'Visit Gallery'
-⍝ 'Home' Assert navigate 'Visit About Us' 'Visit Gallery' 'Back' 'Back'
-⍝ 'Contact' Assert navigate 'Visit About' 'Visit Gallery' 'Back' 'Visit Contact' 'Forward'
-⍝ 'Visit Us' Assert navigate 'Visit About Us' 'Visit Visit Us' 'Forward' 'Visit Contact Us' 'Back'
+navigate←{
+    klick←{
+        i history←⍺
+        cmd←⊃1↑⍵
+        cmd←(6⌈⊃⍴cmd)↑cmd,'  ' ⍝ pad to avoid length error
+        backb forwardb visitb←('Back'≡4↑cmd) ('Forward'≡cmd) ('Visit '≡6↑cmd)
+        i←(i (1⌈i - 1))[1 + backb]
+        i←(i ((⊃⍴history)⌊i + 1))[1 + forwardb]
+        history←⊃(history ((i↑history),⊂6↓cmd))[1 + visitb]
+        i←(i (⊃⍴history))[1 + visitb]
+        (0<⊃⍴w←1↓⍵): i history klick w
+        i history
+    }
+    i history←1 (1⍴⊂'Home') klick ⍵
+    ⊃history[i]
+}
+'About Us' Assert navigate 'Visit About Us' 'Back' 'Forward'
+'Home' Assert navigate 'Forward'
+'Home' Assert navigate 'Back'
+'Gallery' Assert navigate 'Visit About Us' 'Visit Gallery'
+'Home' Assert navigate 'Visit About Us' 'Visit Gallery' 'Back' 'Back'
+'Contact' Assert navigate 'Visit About' 'Visit Gallery' 'Back' 'Visit Contact' 'Forward'
+'Visit Us' Assert navigate 'Visit About Us' 'Visit Visit Us' 'Forward' 'Visit Contact Us' 'Back'
 ⍝ ------------------------------------------------------------------------------
 ⎕←'Integer Sequence'
 ⍝ Given a positive integer, return a string with all of the integers from 1 up
