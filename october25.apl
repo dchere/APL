@@ -7,6 +7,34 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'SpOoKy~CaSe'
+⍝ Given a string representing a variable name, convert it to "spooky case" using
+⍝ the following constraints:
+⍝ Replace all underscores (_), and hyphens (-) with a tilde (~).
+⍝ Capitalize the first letter of the string, and every other letter after that,
+⍝ ignore the tilde character when counting.
+⍝ For example, given hello_world, return HeLlO~wOrLd.
+spookify←{
+    w←⍵
+    ((w∊'_-')/w)←'~'
+    uppercase lowercase←'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz'
+    ((w∊uppercase)/w)←lowercase[uppercase⍳(w∊uppercase)/w]
+    characters←w~'~'
+    ix←{
+        shift←¯1+⍵
+        shift+←+/((shift+1)↑w)='~'
+        shift+((shift↓w)⍳(characters[⍵]))
+    }¨⍳⍴characters    
+    upperix←(2|⍳⍴ix)/ix
+    (w[upperix])←uppercase[lowercase⍳w[upperix]]
+    w
+}
+'HeLlO~wOrLd' Assert spookify 'hello_world'
+'SpOoKy~CaSe' Assert spookify 'Spooky_Case'
+'TrIcK~oR~tReAt' Assert spookify 'TRICK-or-TREAT'
+'C~a~N~d~Y~~b~O~w~L' Assert spookify 'c_a-n_d-y_-b-o_w_l'
+'ThE~hAuNtEd~HoUsE~iS~fUlL~oF~gHoStS' Assert spookify 'thE_hAUntEd-hOUsE-Is-fUll_Of_ghOsts'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Nth Prime'
 ⍝ A prime number is a positive integer greater than 1 that is divisible only by
 ⍝ 1 and itself. The first five prime numbers are 2, 3, 5, 7, and 11.
