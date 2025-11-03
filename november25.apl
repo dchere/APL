@@ -8,6 +8,16 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Word Counter'
+⍝ Given a sentence string, return the number of words that are in the sentence.
+⍝ Words are any sequence of non-space characters and are separated by a single space.
+count_words←{ ⊃⍴(' '(,⊂⍨⊣=,)⊢)⍵ }
+2 Assert count_words 'Hello world'
+9 Assert count_words 'The quick brown fox jumps over the lazy dog.'
+4 Assert count_words 'I like coding challenges!'
+7 Assert count_words 'Complete the challenge in JavaScript and Python.'
+7 Assert count_words 'The missing semi-colon crashed the entire internet.'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Infected'
 ⍝ On November 2nd, 1988, the first major internet worm was released, infecting
 ⍝ about 10% of computers connected to the internet after only a day.
