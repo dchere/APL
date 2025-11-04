@@ -8,6 +8,29 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Image Search'
+⍝ Given an array of image names and a search term, return an array of image
+⍝ names containing the search term.
+⍝ Ignore the case when matching the search terms.
+⍝ Return the images in the same order they appear in the input array.
+image_search←{
+    files pattern←⍵
+    upper←'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    lower←'abcdefghijklmnopqrstuvwxyz'
+    ((pattern∊upper)/pattern)←lower[upper⍳(pattern∊upper)/pattern]
+    lower_case_files←{
+        w←⍵
+        ((w∊upper)/w)←lower[upper⍳(w∊upper)/w]
+        w
+        }¨files
+    lx←{(⊂pattern)∊(⊃⍴pattern) ,/⍵}¨lower_case_files
+    lx/files
+}
+(1⍴⊂'dog.png') Assert image_search ('dog.png' 'cat.jpg' 'parrot.jpeg') 'dog'
+'Sunset.jpg' 'sunflower.jpeg' Assert image_search ('Sunset.jpg' 'Beach.png' 'sunflower.jpeg') 'sun'
+'Moon.png' 'stars.png' Assert image_search ('Moon.png' 'sun.jpeg' 'stars.png') 'PNG'
+'cat.jpg' 'kitty-cat.png' 'catNip.jpeg' 'franken_cat.gif' Assert image_search ('cat.jpg' 'dogToy.jpeg' 'kitty-cat.png' 'catNip.jpeg' 'franken_cat.gif') 'Cat'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Word Counter'
 ⍝ Given a sentence string, return the number of words that are in the sentence.
 ⍝ Words are any sequence of non-space characters and are separated by a single space.
