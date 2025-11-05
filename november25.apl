@@ -8,6 +8,15 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Matrix Builder'
+⍝ Given two integers (a number of rows and a number of columns), return a matrix
+⍝ filled with zeros (0) of the given size.
+build_matrix←{⍵⍴0}
+(2 3 ⍴ 0) Assert build_matrix 2 3
+(3 2 ⍴ 0) Assert build_matrix 3 2
+(4 3 ⍴ 0) Assert build_matrix 4 3
+(9 1 ⍴ 0) Assert build_matrix 9 1
+⍝ ------------------------------------------------------------------------------
 ⎕←'Image Search'
 ⍝ Given an array of image names and a search term, return an array of image
 ⍝ names containing the search term.
