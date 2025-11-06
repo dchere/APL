@@ -8,6 +8,31 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Weekday Finder'
+⍝ Given a string date in the format YYYY-MM-DD, return the day of the week.
+⍝ Valid return days are:
+⍝ "Sunday"
+⍝ "Monday"
+⍝ "Tuesday"
+⍝ "Wednesday"
+⍝ "Thursday"
+⍝ "Friday"
+⍝ "Saturday"
+⍝ Be sure to ignore time zones.
+get_weekday←{
+    year month day←{+/(⌽10*¯1+⍳⍴⍵)×(0 1 2 3 4 5 6 7 8 9)['0123456789'⍳⍵]}¨(⍵[⍳4]) (⍵[6 7]) (⍵[9 10])
+    k←⌊(14 - month)÷12 ⍝ gives 1 for Jan/Feb, 0 otherwise
+    y←year + 4800 - k
+    m←+/month ¯3 (12×k)
+    jdn←+/day (⌊(2 + m×153)÷5) (365×y) (⌊0.25×y) (⌊¯0.01×y) (⌊y÷400) (¯32045)
+    ⊃('Sunday' 'Monday' 'Tuesday' 'Wednesday' 'Thursday' 'Friday' 'Saturday')[1+7|2 + jdn]
+}
+'Thursday' Assert get_weekday '2025-11-06'
+'Friday' Assert get_weekday '1999-12-31'
+'Saturday' Assert get_weekday '1111-11-11'
+'Wednesday' Assert get_weekday '2112-12-21'
+'Monday' Assert get_weekday '2345-10-01'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Matrix Builder'
 ⍝ Given two integers (a number of rows and a number of columns), return a matrix
 ⍝ filled with zeros (0) of the given size.
