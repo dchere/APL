@@ -8,6 +8,27 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Counting Cards'
+⍝ A standard deck of playing cards has 13 unique cards in each suit. Given an
+⍝ integer representing the number of cards to pick from the deck, return the
+⍝ number of unique combinations of cards you can pick.
+⍝ Order does not matter. Picking card A then card B is the same as picking card
+⍝ B then card A.
+⍝ For example, given 52, return 1. There's only one combination of 52 cards to
+⍝ pick from a 52 card deck. And given 2, return 1326, There's 1326 card
+⍝ combinations you can end up with when picking 2 cards from the deck.
+combinations←{
+    numerator ← ×/(52 - ⍵) + ⍳⍵
+    denominator ← ×/⍳⍵
+    numerator ÷ denominator
+}
+1 Assert combinations 52
+52 Assert combinations 1
+1326 Assert combinations 2
+2598960 Assert combinations 5
+15820024220 Assert combinations 10
+1326 Assert combinations 50
+⍝ ------------------------------------------------------------------------------
 ⎕←'Weekday Finder'
 ⍝ Given a string date in the format YYYY-MM-DD, return the day of the week.
 ⍝ Valid return days are:
