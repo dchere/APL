@@ -8,6 +8,23 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Character Limit'
+⍝ You are given a string and need to determine if it fits in a social media post.
+⍝ Return the following strings based on the rules given:
+⍝ "short post" if it fits within a 40-character limit.
+⍝ "long post" if it's greater than 40 characters and fits within an 80-character
+⍝ limit.
+⍝ "invalid post" if it's too long to fit within either limit.
+can_post←{
+    len←⊃⍴⍵
+    (len≤40): 'short post'
+    (len≤80): 'long post'
+    'invalid post'
+}
+'short post' Assert can_post 'Hello world'
+'long post' Assert can_post 'This is a longer message but still under eighty characters.'
+'invalid post' Assert can_post 'This message is too long to fit into either of the character limits for a social media post.'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Counting Cards'
 ⍝ A standard deck of playing cards has 13 unique cards in each suit. Given an
 ⍝ integer representing the number of cards to pick from the deck, return the
@@ -62,6 +79,13 @@ build_matrix←{⍵⍴0}
 (3 2 ⍴ 0) Assert build_matrix 3 2
 (4 3 ⍴ 0) Assert build_matrix 4 3
 (9 1 ⍴ 0) Assert build_matrix 9 1
+build_matrix←{
+    ⍵[1]⍴⊂⍵[2]⍴0
+    }
+(0 0 0) (0 0 0) Assert build_matrix 2 3 
+(0 0) (0 0) (0 0) Assert build_matrix 3 2
+(0 0 0) (0 0 0) (0 0 0) (0 0 0) Assert build_matrix 4 3
+(,0) (,0) (,0) (,0) (,0) (,0) (,0) (,0) (,0) Assert build_matrix 9 1 
 ⍝ ------------------------------------------------------------------------------
 ⎕←'Image Search'
 ⍝ Given an array of image names and a search term, return an array of image
