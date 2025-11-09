@@ -8,6 +8,42 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Word Search'
+⍝ Given a matrix (an array of arrays) of single letters and a word to find,
+⍝ return the start and end indices of the word in the matrix.
+⍝ The given matrix will be filled with all lowercase letters (a-z).
+⍝ The word to find will always be in the matrix exactly once.
+⍝ The word to find will always be in a straight line in one of these directions:
+⍝ left to right
+⍝ right to left
+⍝ top to bottom
+⍝ bottom to top
+⍝ For example, given the matrix:
+⍝ [
+⍝   ["a", "c", "t"],
+⍝   ["t", "a", "t"],
+⍝   ["c", "t", "c"]
+⍝ ]
+⍝ And the word "cat", return:
+⍝ [[0, 1], [2, 1]]
+⍝ Where [0, 1] are the indices for the "c" (start of the word), and [2, 1] are
+⍝ the indices for the "t" (end of the word).
+find_word←{
+    matrix word←⍵
+    n←⊃⍴word
+    m←↓matrix
+    (n>i←¯1+m⍳⊂word): (i 0) (i (n-1))
+    (n>i←¯1+m⍳⊂⌽word): (i (n-1)) (i 0)
+    m←↓⍉matrix
+    (n>i←¯1+m⍳⊂word): (0 i) ((n-1) i)
+    i←¯1+m⍳⊂⌽word
+    ((n-1) i) (0 i)
+}
+(0 1) (2 1) Assert find_word (3 3 ⍴ 'acttatctc') 'cat'
+(0 0) (0 2) Assert find_word (3 3 ⍴ 'dogogddgo') 'dog'
+(3 3) (0 3) Assert find_word (4 4 ⍴'hishisfsfsiishif') 'fish'
+(1 2) (1 0) Assert find_word (3 3 ⍴'xoxxofxxf') 'fox'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Character Limit'
 ⍝ You are given a string and need to determine if it fits in a social media post.
 ⍝ Return the following strings based on the rules given:
