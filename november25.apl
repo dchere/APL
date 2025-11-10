@@ -8,6 +8,23 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Extension Extractor'
+⍝ Given a string representing a filename, return the extension of the file.
+⍝ The extension is the part of the filename that comes after the last period (.).
+⍝ If the filename does not contain a period or ends with a period, return "none".
+⍝ The extension should be returned as-is, preserving case.
+get_extension←{
+    doti←(⌽⍵)⍳'.'
+    (doti=1)∨(doti>⊃⍴⍵): 'none'
+    (-doti-1)↑⍵
+}
+'txt' Assert get_extension 'document.txt'
+'none' Assert get_extension 'README'
+'PNG' Assert get_extension 'image.PNG'
+'gitignore' Assert get_extension '.gitignore'
+'gz' Assert get_extension 'archive.tar.gz'
+'none' Assert get_extension 'final.draft.'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Word Search'
 ⍝ Given a matrix (an array of arrays) of single letters and a word to find,
 ⍝ return the start and end indices of the word in the matrix.
