@@ -8,6 +8,25 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Vowels and Consonants'
+⍝ Given a string, return an array with the number of vowels and number of
+⍝ consonants in the string.
+⍝ Vowels consist of a, e, i, o, u in any case.
+⍝ Consonants consist of all other letters in any case.
+⍝ Ignore any non-letter characters.
+⍝ For example, given "Hello World", return [3, 7].
+count←{
+    vowels←'aeiouAEIOU'
+    consonants←'bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ'
+    (+/⍵∊vowels) (+/⍵∊consonants)
+}
+3 7  Assert count 'Hello World'
+3 7 Assert count 'JavaScript'
+1 5 Assert count 'Python'
+5 7 Assert count 'freeCodeCamp'
+3 7 Assert count 'Hello, World!'
+11 24 Assert count 'The quick brown fox jumps over the lazy dog.'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Extension Extractor'
 ⍝ Given a string representing a filename, return the extension of the file.
 ⍝ The extension is the part of the filename that comes after the last period (.).
