@@ -19,8 +19,7 @@ Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (
 shift_array←{
     arr shift←⍵
     shift←(⊃⍴arr)|shift
-    (shift>0):(shift↓arr),(shift↑arr)
-    (shift↑arr),(shift↓arr)
+    (shift↓arr),(shift↑arr)
 }
 2 3 1 Assert shift_array (1 2 3) 1
 3 1 2 Assert shift_array (1 2 3) ¯1
