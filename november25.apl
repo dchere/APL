@@ -301,3 +301,29 @@ verify←{
 1 Assert verify 'Is this valid?' 'Yes' 233
 1 Assert verify 'Check out the freeCodeCamp podcast,' 'in the mobile app' 514
 ⍝ ------------------------------------------------------------------------------
+⎕←'Is It the Weekend?'
+⍝ Given a date in the format "YYYY-MM-DD", return the number of days left until
+⍝ the weekend.
+⍝ The weekend starts on Saturday.
+⍝ If the given date is Saturday or Sunday, return "It's the weekend!".
+⍝ Otherwise, return "X days until the weekend.", where X is the number of days
+⍝ until Saturday.
+⍝ If X is 1, use "day" (singular) instead of "days" (plural).
+⍝ Make sure the calculation ignores your local timezone.
+days_until_weekend←{
+    weekday←⊂get_weekday ⍵
+    (weekday ∊ 'Saturday' 'Sunday'): 'It''s the weekend!'
+    (weekday≡⊂'Friday'): '1 day until the weekend.'
+    days←⍕1 + ('Thursday' 'Wednesday' 'Tuesday' 'Monday')⍳weekday
+    days,' days until the weekend.' 
+}
+'1 day until the weekend.' Assert days_until_weekend '2025-11-14'
+'3 days until the weekend.' Assert days_until_weekend '2025-01-01'
+'It''s the weekend!' Assert days_until_weekend '2025-12-06'
+'4 days until the weekend.' Assert days_until_weekend '2026-01-27'
+'5 days until the weekend.' Assert days_until_weekend '2026-09-07'
+'It''s the weekend!' Assert days_until_weekend '2026-11-29'
+⍝ ------------------------------------------------------------------------------
+⍝ ← + - × ÷ * ⍟ ⌹ ○ ! ? | ⌈ ⌊ ⊥ ⊤ ⊣ ⊢ = ≠ ≤ < > ≥ ≡ ≢ ∨ ∧ ⍲ ⍱ ↑ ↓ ⊂ ⊃ ⊆ ⌷ ⍋ ⍒ 
+⍝ ⍳ ⍸ ∊ ⍷ ∪ ∩ ~ / \ ⌿ ⍀ , ⍪ ⍴ ⌽ ⊖ ⍉ ¨ ⍨ ⍣ . ∘ ⍛ ⍤ ⍥ @ ⍞ ⎕ ⍠ ⌸ ⌺ ⌶ ⍎ ⍕ ⋄ → ⍵ ⍺ ∇
+⍝ & ¯ ⍬ ∆ ⍙
