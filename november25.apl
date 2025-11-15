@@ -8,6 +8,25 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'GCD'
+⍝ Given two positive integers, return their greatest common divisor (GCD).
+
+⍝ The GCD of two integers is the largest number that divides evenly into both
+⍝ numbers without leaving a remainder.
+⍝ For example, the divisors of 4 are 1, 2, and 4. The divisors of 6 are 1, 2, 3,
+⍝ and 6. So given 4 and 6, return 2, the largest number that appears in both
+⍝ sets of divisors.
+gcd←{
+    a b←⍵
+    (b=0): a
+    gcd b (b|a)
+}
+2 Assert gcd 4 6
+5 Assert gcd 20 15
+1 Assert gcd 13 17
+6 Assert gcd 654 456
+864 Assert gcd 3456 4320
+⍝ ------------------------------------------------------------------------------
 ⎕←'Array Shift'
 ⍝ Given an array and an integer representing how many positions to shift the
 ⍝ array, return the shifted array.
@@ -324,6 +343,3 @@ days_until_weekend←{
 '5 days until the weekend.' Assert days_until_weekend '2026-09-07'
 'It''s the weekend!' Assert days_until_weekend '2026-11-29'
 ⍝ ------------------------------------------------------------------------------
-⍝ ← + - × ÷ * ⍟ ⌹ ○ ! ? | ⌈ ⌊ ⊥ ⊤ ⊣ ⊢ = ≠ ≤ < > ≥ ≡ ≢ ∨ ∧ ⍲ ⍱ ↑ ↓ ⊂ ⊃ ⊆ ⌷ ⍋ ⍒ 
-⍝ ⍳ ⍸ ∊ ⍷ ∪ ∩ ~ / \ ⌿ ⍀ , ⍪ ⍴ ⌽ ⊖ ⍉ ¨ ⍨ ⍣ . ∘ ⍛ ⍤ ⍥ @ ⍞ ⎕ ⍠ ⌸ ⌺ ⌶ ⍎ ⍕ ⋄ → ⍵ ⍺ ∇
-⍝ & ¯ ⍬ ∆ ⍙
