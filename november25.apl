@@ -8,6 +8,27 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Fingerprint Test'
+⍝ Given two strings representing fingerprints, determine if they are a match
+⍝ using the following rules:
+⍝ Each fingerprint will consist only of lowercase letters (a-z).
+⍝ Two fingerprints are considered a match if:
+⍝ They are the same length.
+⍝ The number of differing characters does not exceed 10% of the fingerprint length.
+is_match←{
+    fp1 fp2←⍵
+    lenfp←⊃⍴fp1
+    lenfp≠(⊃⍴fp2): 0
+    diffs←+/fp1≠fp2
+    diffs≤⌊0.1×lenfp
+}
+1 Assert is_match 'helloworld' 'helloworld'
+0 Assert is_match 'helloworld' 'helloworlds'
+1 Assert is_match 'helloworld' 'jelloworld'
+1 Assert is_match 'thequickbrownfoxjumpsoverthelazydog' 'thequickbrownfoxjumpsoverthelazydog'
+1 Assert is_match 'theslickbrownfoxjumpsoverthelazydog' 'thequickbrownfoxjumpsoverthehazydog'
+0 Assert is_match 'thequickbrownfoxjumpsoverthelazydog' 'thequickbrownfoxjumpsoverthehazycat'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Rectangle Count'
 ⍝ Given two positive integers representing the width and height of a rectangle,
 ⍝ determine how many rectangles can fit in the given one.
