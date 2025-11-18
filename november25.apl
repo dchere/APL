@@ -8,6 +8,16 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'100 Characters'
+⍝ Given a string, repeat its characters until the result is exactly 100 characters
+⍝ long. If your repetitions go over 100 characters, trim the extra so it's exactly
+⍝ 100.
+one_hundred←{100⍴⍵}
+'One hundred One hundred One hundred One hundred One hundred One hundred One hundred One hundred One ' Assert one_hundred 'One hundred '
+'freeCodeCamp freeCodeCamp freeCodeCamp freeCodeCamp freeCodeCamp freeCodeCamp freeCodeCamp freeCodeC' Assert one_hundred 'freeCodeCamp '
+'daily challenges daily challenges daily challenges daily challenges daily challenges daily challenge' Assert one_hundred 'daily challenges '
+'!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' Assert one_hundred '!'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Fingerprint Test'
 ⍝ Given two strings representing fingerprints, determine if they are a match
 ⍝ using the following rules:
