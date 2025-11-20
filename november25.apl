@@ -8,6 +8,24 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Longest Word'
+⍝ Given a sentence string, return the longest word in the sentence.
+⍝ Words are separated by a single space.
+⍝ Only letters (a-z, case-insensitive) count toward the word's length.
+⍝ If there are multiple words with the same length, return the first one that appears.
+⍝ Return the word as it appears in the given string, with punctuation removed.
+longestWord←{
+    words←{(⍵∊'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')/⍵}¨(' '(,⊂⍨⊣=,)⊢)⍵
+    lengths←{⊃⍴⍵}¨words
+    ⊃words[⍒lengths]
+}
+'quick' Assert longestWord 'The quick red fox'
+'challenge' Assert longestWord 'Hello coding challenge.'
+'This' Assert longestWord 'Do Try This At Home.'
+'exlamation' Assert longestWord 'This sentence... has commas, ellipses, and an exlamation point!'
+'tie' Assert longestWord 'A tie? No way!'
+'Wouldnt' Assert longestWord 'Wouldn''t you like to know.'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Markdown Heading Converter'
 ⍝ Given a string representing a Markdown ⊂heading, return the equivalent HTML heading.
 ⍝ A valid Markdown heading must:
