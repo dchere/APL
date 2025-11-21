@@ -436,3 +436,17 @@ days_until_weekend←{
 '5 days until the weekend.' Assert days_until_weekend '2026-09-07'
 'It''s the weekend!' Assert days_until_weekend '2026-11-29'
 ⍝ ------------------------------------------------------------------------------
+⎕←'LCM'
+⍝  Given two integers, return the least common multiple (LCM) of the two numbers.
+⍝  The LCM of two numbers is the smallest positive integer that is a multiple of
+⍝  both numbers. For example, given 4 and 6, return 12 because:
+⍝  Multiples of 4 are 4, 8, 12 and so on.
+⍝  Multplies of 6 are 6, 12, 18 and so on.
+⍝  12 is the smallest number that is a multiple of both.
+lcm←{ (×/⍵)÷gcd ⍵ }
+12 Assert lcm 4 6
+18 Assert lcm 9 6
+100 Assert lcm 10 100
+221 Assert lcm 13 17
+630 Assert lcm 45 70
+⍝ ------------------------------------------------------------------------------
