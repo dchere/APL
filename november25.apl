@@ -8,6 +8,26 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Character Count'
+⍝ Given a sentence string, return an array with a count of each character in
+⍝ alphabetical order.
+⍝ Treat upper and lowercase letters as the same letter when counting.
+⍝ Ignore numbers, spaces, punctuation, etc.
+⍝ Return the count and letter in the format "letter count". For instance, "a 3".
+⍝ All returned letters should be lowercase.
+⍝ Do not return a count of letters that are not in the given string.
+countCharacters←{
+    upper←'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    lower←'abcdefghijklmnopqrstuvwxyz'
+    w←(⍵∊upper,lower)/⍵
+    ((w∊upper)/w)←lower[upper⍳(w∊upper)/w]
+    unique←∪w
+    {⍵,' ',⍕+/w=⍵}¨unique[⍋unique]
+}
+'d 1' 'e 1' 'h 1' 'l 3' 'o 2' 'r 1' 'w 1' Assert countCharacters 'hello world'
+'a 1' 'c 2' 'd 1' 'e 3' 'g 2' 'h 1' 'i 2' 'l 3' 'n 2' 'o 2' 's 1' 'v 1' Assert countCharacters 'I love coding challenges!'
+'a 3' 'c 2' 'd 1' 'e 4' 'g 1' 'h 2' 'i 1' 'l 3' 'm 1' 'n 1' 'o 3' 'p 2' 's 2' 't 3' Assert countCharacters '// TODO: Complete this challenge ASAP!'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Recipe Scaler'
 ⍝ Given an array of recipe ingredients and a number to scale the recipe, return
 ⍝ an array with the quantities scaled accordingly.
