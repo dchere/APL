@@ -8,6 +8,27 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Message Validator'
+⍝ Given a message string and a validation string, determine if the message is valid.
+⍝ A message is valid if each word in the message starts with the corresponding
+⍝ letter in the validation string, in order.
+⍝ Letters are case-insensitive.
+⍝ Words in the message are separated by single spaces.
+is_valid_message←{
+    msg val←⍵
+    first_letters←(¯1↓' '=' ',msg)/msg
+    upper←'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    lower←'abcdefghijklmnopqrstuvwxyz'
+    ((first_letters∊upper)/first_letters)←lower[upper⍳(first_letters∊upper)/first_letters]
+    ((val∊upper)/val)←lower[upper⍳(val∊upper)/val]
+    first_letters≡val
+}
+1 Assert is_valid_message 'hello world' 'hw'
+1 Assert is_valid_message 'ALL CAPITAL LETTERS' 'acl'
+0 Assert is_valid_message 'Coding challenge are boring.' 'cca'
+1 Assert is_valid_message 'The quick brown fox jumps over the lazy dog.' 'TQBFJOTLD'
+0 Assert is_valid_message 'The quick brown fox jumps over the lazy dog.' 'TQBFJOTLDT'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Character Count'
 ⍝ Given a sentence string, return an array with a count of each character in
 ⍝ alphabetical order.
