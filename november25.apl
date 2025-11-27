@@ -8,6 +8,24 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'What''s My Age Again?'
+⍝ Given the date of someone's birthday in the format YYYY-MM-DD, return the
+⍝ person's age as of November 27th, 2025.
+⍝ Assume all birthdays are valid dates before November 27th, 2025.
+⍝ Return the age as an integer.
+⍝  Be sure to account for whether the person has already had their birthday in 2025.
+calculate_age←{
+    year month day←{+/(⌽10*¯1+⍳⍴⍵)×(0 1 2 3 4 5 6 7 8 9)['0123456789'⍳⍵]}¨(⍵[⍳4]) (⍵[6 7]) (⍵[9 10])
+    age←2025 - year
+    ((month>11)∨((month=11)∧(day>27))): age - 1
+    age
+}
+25 Assert calculate_age '2000-11-20'
+24 Assert calculate_age '2000-12-01'
+11 Assert calculate_age '2014-10-25'
+31 Assert calculate_age '1994-01-06'
+30 Assert calculate_age '1994-12-14'
+⍝ ------------------------------------------------------------------------------
 ⎕←'FizzBuzz'
 ⍝ Given an integer (n), return an array of integers from 1 to n (inclusive),
 ⍝ replacing numbers that are multiple of:
