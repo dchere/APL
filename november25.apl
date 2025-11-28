@@ -8,6 +8,32 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Word Guesser'
+⍝ Given two strings of the same length, a secret word and a guess, compare the
+⍝ guess to the secret word using the following rules:
+⍝ The secret word and guess will only consist of uppercase letters ("A" to "Z");
+⍝ For each letter in the guess, replace it with a number according to how it
+⍝ matches the secret word:
+⍝ "2" if the letter is in the secret word and in the correct position.
+⍝ "1" if the letter is in the secret word but in the wrong position.
+⍝ "0" if the letter is not in the secret word.
+compare←{
+    word guess←⍵
+    lx←~(word=guess)
+    {
+        a b←(word[⍵]) (guess[⍵])
+        a≡b: 2
+        b∊lx/word: 1
+        0      
+    }¨⍳⍴word
+}
+1 0 2 1 1 Assert compare 'APPLE' 'POPPA'
+1 1 2 2 1 Assert compare 'REACT' 'TRACE'
+0 0 0 0 0 0 Assert compare 'DEBUGS' 'PYTHON'
+0 0 0 0 2 2 2 2 2 2 Assert compare 'JAVASCRIPT' 'TYPESCRIPT'
+1 1 0 2 0 0 Assert compare 'ORANGE' 'ROUNDS'
+1 0 0 2 1 0 1 0 Assert compare 'WIRELESS' 'ETHERNET'
+⍝ ------------------------------------------------------------------------------
 ⎕←'What''s My Age Again?'
 ⍝ Given the date of someone's birthday in the format YYYY-MM-DD, return the
 ⍝ person's age as of November 27th, 2025.
