@@ -8,6 +8,31 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'Ball Trajectory'
+⍝ Given a matrix (array of arrays) that includes the location of the ball (2),
+⍝ and the previous location of the ball (1), return the matrix indices for the
+⍝ next location of the ball.
+⍝ The ball always moves in a straight line.
+⍝ The movement direction is determined by how the ball moved from 1 to 2.
+⍝ The edges of the matrix are considered walls. If the balls hits a:
+⍝ top or bottom wall, it bounces by reversing its vertical direction.
+⍝ left or right wall, it bounces by reversing its horizontal direction.
+⍝ corner, it bounces by reversing both directions.
+getNextLocation←{
+    cur_pos←⊃⍸2=⍵ ⍝ ⍸ gives indices all non-zero elements of any rank structure 
+    prev_pos←⊃⍸1=⍵ ⍝ we need to differentiate between current and previous position
+    {
+        (⍵<1): 2
+        (⍵>4): 3
+        ⍵
+    }¨cur_pos + cur_pos - prev_pos ⍝ cur_pos - prev_pos is a vector indicating direction
+ }
+3 4 Assert getNextLocation 4 4 ⍴ 0 0 0 0, 0 0 0 0,  0 1 2 0, 0 0 0 0
+4 1 Assert getNextLocation 4 4 ⍴ 0 0 0 0, 0 0 1 0,  0 2 0 0, 0 0 0 0
+2 3 Assert getNextLocation 4 4 ⍴ 0 2 0 0, 1 0 0 0, 0 0 0 0, 0 0 0 0
+2 2 Assert getNextLocation 4 4 ⍴ 0 0 0 0, 0 0 0 0, 2 0 0 0, 0 1 0 0
+3 3 Assert getNextLocation 4 4 ⍴ 0 0 0 0, 0 0 0 0, 0 0 1 0, 0 0 0 2
+⍝ ------------------------------------------------------------------------------
 ⎕←'Word Guesser'
 ⍝ Given two strings of the same length, a secret word and a guess, compare the
 ⍝ guess to the secret word using the following rules:
