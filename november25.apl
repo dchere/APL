@@ -8,6 +8,28 @@
 Assert←{⍺≡⍵:0 ⋄ ⎕←⍺ (≡⍺) (⍴¨⍺) ⋄ ⎕←⍵ (≡⍵) (⍴¨⍵) ⋄ ⎕SIGNAL 11} ⍝ Custom assert function for testing
 
 ⍝ ------------------------------------------------------------------------------
+⎕←'AI Detector'
+⍝ Given a string of one or more sentences, determine if it was likely generated
+⍝ by AI using the following rules:
+⍝ It contains two or more dashes (-).
+⍝ It contains two or more sets of parenthesis (()). Text can be within the parenthesis.
+⍝ It contains three or more words with 7 or more letters.
+⍝ Words are separated by a single space and only consist of letters (A-Z).
+⍝ Don't include punctuation or other non-letters as part of a word.
+⍝ If the given sentence meets any of the rules above, return "AI", otherwise, return "Human".
+detect_ai←{
+    (2≤+/⍵='-'): 'AI' ⍝ Dash rule
+    (4≤+/⍵∊'()'): 'AI' ⍝ Parenthesis rule
+    words←{(⍵∊'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')/⍵}¨(' '(,⊂⍨⊣=,)⊢)⍵
+    (3≤+/7≤⊃¨⍴¨words) : 'AI' ⍝ Long word rule
+    'Human'
+}
+'Human' Assert detect_ai 'The quick brown fox jumped over the lazy dog.'
+'Human' Assert detect_ai 'The hypersonic brown fox - jumped (over) the lazy dog.'
+'AI' Assert detect_ai 'Yes - you''re right! I made a mistake there - let me try again.'
+'AI' Assert detect_ai 'The extraordinary students were studying vivaciously.'
+'AI' Assert detect_ai 'The (excited) student was (coding) in the library.'
+⍝ ------------------------------------------------------------------------------
 ⎕←'Ball Trajectory'
 ⍝ Given a matrix (array of arrays) that includes the location of the ball (2),
 ⍝ and the previous location of the ball (1), return the matrix indices for the
